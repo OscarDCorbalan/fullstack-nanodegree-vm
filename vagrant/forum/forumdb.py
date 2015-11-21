@@ -2,6 +2,7 @@
 # Database access functions for the web forum.
 #
 
+import bleach
 import time
 import psycopg2
 
@@ -21,7 +22,7 @@ def GetAllPosts():
     cur.execute("SELECT content, time FROM posts ORDER BY time DESC;")
     rows = cur.fetchall()
     return [{
-            'content': str(row[0]),
+            'content': str(bleach.clean(row[0])),
             'time': str(row[1])
             } for row in rows]
 
@@ -34,5 +35,5 @@ def AddPost(content):
     '''
     query = "INSERT INTO posts (content) VALUES (%s);"
     cur = DB.cursor()
-    cur.execute(query, [content])
+    cur.execute(query, [bleach.clean(content)])
     DB.commit()
