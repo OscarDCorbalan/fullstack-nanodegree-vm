@@ -21,6 +21,7 @@ def GetAllPosts():
     cur = DB.cursor()
     cur.execute("SELECT content, time FROM posts ORDER BY time DESC;")
     rows = cur.fetchall()
+    cur.close()
     return [{
             'content': str(bleach.clean(row[0])),
             'time': str(row[1])
@@ -37,3 +38,4 @@ def AddPost(content):
     cur = DB.cursor()
     cur.execute(query, [bleach.clean(content)])
     DB.commit()
+    cur.close()
