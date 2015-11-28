@@ -39,6 +39,8 @@ def deleteMatches():
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    query = "DELETE FROM players;"
+    execute(query, None)
 
 
 def countPlayers():
