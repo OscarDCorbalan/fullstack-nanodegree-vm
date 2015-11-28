@@ -5,6 +5,7 @@
 --
 
 -- DROP existing tables before re-creating them.
+DELETE FROM matches;
 DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS matches;
 
