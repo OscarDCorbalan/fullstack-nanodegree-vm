@@ -19,3 +19,15 @@ CREATE TABLE matches (
     player2     integer NOT NULL REFERENCES players(id),
     winner      integer NOT NULL REFERENCES players(id)
 );
+
+INSERT INTO players (name) VALUES
+    ('Oscar'),
+    ('Tuvok'),
+    ('Mary'),
+    ('James');
+
+INSERT INTO matches (player1, player2, winner) VALUES
+    (1, 2, 1),
+    (3, 4, 3),
+    (1, 3, 1),
+    (2, 4, 2);
