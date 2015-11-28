@@ -11,13 +11,11 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 def execute(query, values):
-    # Connect to the database
+    # Connect to the database and open a cursor to perform the operation
     conn = connect()
-
-    # Open a cursor to perform the operation
     cursor = conn.cursor()
 
-    # Execute the command
+    # Execute the command, bleaching the passed values (f any)
     if values is None:
         cursor.execute(query)
     else:
@@ -32,6 +30,28 @@ def execute(query, values):
     cursor.close()
     conn.close()
 
+def fetch(query, values):
+    # Connect to the database and open a cursor to perform the operation
+    conn = connect()
+    cursor = conn.cursor()
+
+    # Execute the command, bleaching the passed values (f any)
+    if values is None:
+        cursor.execute(query)
+    else:
+        for value in values:
+            value = bleach.clean(value)
+        cursor.execute(query, values)
+
+    # Get the results of the query
+    row = cursor.fetchone()
+
+    # Close communication with the database
+    cursor.close()
+    conn.close()
+
+    return row
+
 def deleteMatches():
     """Remove all the match records from the database."""
     query = "DELETE FROM matches;"
@@ -45,6 +65,8 @@ def deletePlayers():
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    query = "SELECT COUNT(*) FROM players";
+    return fetch(query, None)[0]
 
 
 def registerPlayer(name):
