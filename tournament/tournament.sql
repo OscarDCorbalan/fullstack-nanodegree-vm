@@ -16,9 +16,8 @@ CREATE TABLE players (
 );
 
 CREATE TABLE matches (
-    player1     integer NOT NULL REFERENCES players(id),
-    player2     integer NOT NULL REFERENCES players(id),
-    winner      integer NOT NULL REFERENCES players(id)
+    winner      integer NOT NULL REFERENCES players(id),
+    loser       integer NOT NULL REFERENCES players(id)
 );
 
 INSERT INTO players (name) VALUES
@@ -27,8 +26,10 @@ INSERT INTO players (name) VALUES
     ('Mary'),
     ('James');
 
-INSERT INTO matches (player1, player2, winner) VALUES
-    (1, 2, 1),
-    (3, 4, 3),
-    (1, 3, 1),
-    (2, 4, 2);
+INSERT INTO matches (winner, loser) VALUES
+    (1, 2),
+    (3, 4),
+    (1, 3),
+    (2, 4);
+
+--SELECT players.name, (SELECT COUNT(*) FROM matches as m WHERE m.winner = players.id) as wins, (SELECT COUNT(*) FROM matches as m WHERE m.winner=players.id OR m.loser = players.id) FROM players ORDER BY wins DESC;

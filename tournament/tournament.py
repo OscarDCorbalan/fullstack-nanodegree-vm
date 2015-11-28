@@ -30,7 +30,7 @@ def execute(query, values):
     cursor.close()
     conn.close()
 
-def fetch(query, values):
+def fetch(query, values, singlerow = False):
     # Connect to the database and open a cursor to perform the operation
     conn = connect()
     cursor = conn.cursor()
@@ -44,13 +44,16 @@ def fetch(query, values):
         cursor.execute(query, values)
 
     # Get the results of the query
-    row = cursor.fetchone()
+    if singlerow:
+        rows = cursor.fetchone()
+    else:
+        rows = cursor.fetchall()
 
     # Close communication with the database
     cursor.close()
     conn.close()
 
-    return row
+    return rows
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -66,7 +69,7 @@ def deletePlayers():
 def countPlayers():
     """Returns the number of players currently registered."""
     query = "SELECT COUNT(*) FROM players";
-    return fetch(query, None)[0]
+    return fetch(query, None, True)[0]
 
 
 def registerPlayer(name):
@@ -94,7 +97,21 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
+    query = '''
+        SELECT players.id, players.name, \
+        (SELECT COUNT(*) FROM matches as m \
+        WHERE m.winner = players.id) as wins, \
+        (SELECT COUNT(*) FROM matches as m \
+        WHERE m.winner = players.id OR m.loser = players.id) as total \
+        FROM players ORDER BY wins DESC; \
+        '''
+    rows = fetch(query, None)
+    return [(
+            int(row[0]),
+            str(bleach.clean(row[1])),
+            int(row[2]),
+            int(row[3])
+            ) for row in rows]
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
