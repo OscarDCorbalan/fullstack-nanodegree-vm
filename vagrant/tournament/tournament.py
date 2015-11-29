@@ -97,14 +97,7 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    query = '''
-        SELECT players.id, players.name, \
-        (SELECT COUNT(*) FROM matches as m \
-        WHERE m.winner = players.id) as wins, \
-        (SELECT COUNT(*) FROM matches as m \
-        WHERE m.winner = players.id OR m.loser = players.id) as total \
-        FROM players ORDER BY wins DESC; \
-        '''
+    query = "SELECT * FROM standings;"
     rows = fetch(query, None)
     return [(
             int(row[0]),
