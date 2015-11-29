@@ -13,7 +13,7 @@ The game tournament uses the Swiss system for pairing up players in each round: 
 # What's included
 
 Within the download you'll find the following directories and files, logically grouping common assets. You'll see something like this:
-`
+```
 ├── vagrant/  
 │   ├── tournament/             Swiss tournament project  
 │   │   ├──tournament_test.py   Automated tests  
@@ -24,7 +24,7 @@ Within the download you'll find the following directories and files, logically g
 │   ├── Vagrantfile             Virtual machine configuration  
 │   └── pg_config.sh  
 └── README.md                   This file  
-`
+```
 
 # Cases covered
 
