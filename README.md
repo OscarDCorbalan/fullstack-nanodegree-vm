@@ -29,6 +29,7 @@ Within the download you'll find the following directories and files, logically g
 # Cases covered
 
 Basic function:
+
 1. ~~Old matches can be deleted.~~
 2. ~~Player records can be deleted.~~
 3. ~~After deleting, countPlayers() returns zero.~~
