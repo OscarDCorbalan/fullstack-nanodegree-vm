@@ -1,6 +1,6 @@
 # Tournament planner
 
-__This project is part of GitHub's Full Stack Developer Nanodegree.__
+_This project is part of Udacity's Full Stack Developer Nanodegree._
 
 This project consists in implementing a **Python** module that uses a **PostgreSQL** database to keep track of players and matches in a game tournament, having two parts:
   * (**tournament.sql**) Defining the database schema (SQL table definitions).
@@ -38,7 +38,9 @@ Basic function:
 6. ~~Newly registered players appear in the standings with no matches.~~
 7. After a match, players have updated standings.
 8. After one match, players with one win are paired.
+
 Extra:
+
 9. Prevent rematches between players.
 10. Don’t assume an even number of players. If there is an odd number of players, assign one player a “bye” (skipped round). A bye counts as a free win. A player should not receive more than one bye in a tournament.
 11. Support games where a draw (tied game) is possible. This will require changing the arguments to reportMatch.
