@@ -20,16 +20,13 @@ CREATE TABLE matches (
     loser       integer NOT NULL REFERENCES players(id)
 );
 
-INSERT INTO players (name) VALUES
-    ('Oscar'),
-    ('Tuvok'),
-    ('Mary'),
-    ('James');
-
-INSERT INTO matches (winner, loser) VALUES
-    (1, 2),
-    (3, 4),
-    (1, 3),
-    (2, 4);
+CREATE VIEW standings AS
+    SELECT players.id, players.name,
+    (SELECT COUNT(*) FROM matches
+        WHERE matches.winner = players.id) as wins,
+    (SELECT COUNT(*) FROM matches
+        WHERE matches.winner = players.id OR matches.loser = players.id) as total
+    FROM players
+    ORDER BY wins DESC;
 
 --SELECT players.name, (SELECT COUNT(*) FROM matches as m WHERE m.winner = players.id) as wins, (SELECT COUNT(*) FROM matches as m WHERE m.winner=players.id OR m.loser = players.id) FROM players ORDER BY wins DESC;
