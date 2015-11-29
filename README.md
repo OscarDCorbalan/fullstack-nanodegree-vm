@@ -1,4 +1,4 @@
-# Tournament planner
+# Tournament Planner
 
 _This project is part of Udacity's Full Stack Developer Nanodegree._
 
@@ -15,12 +15,10 @@ The game tournament uses the Swiss system for pairing up players in each round: 
 Within the download you'll find the following directories and files, logically grouping common assets. You'll see something like this:
 ```
 ├── vagrant/  
-│   ├── tournament/             Swiss tournament project  
+│   ├── tournament/             Tournament Planner
 │   │   ├──tournament_test.py   Automated tests  
 │   │   ├──tournament.py        Code  
 │   │   └──tournament.sql       Definition of the DB  
-│   ├── catalog/                Empty dir  
-│   ├── forum/                  Forum project  
 │   ├── Vagrantfile             Virtual machine configuration  
 │   └── pg_config.sh  
 └── README.md                   This file  
