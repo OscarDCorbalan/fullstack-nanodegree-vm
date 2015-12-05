@@ -21,12 +21,16 @@ CREATE TABLE matches (
 );
 
 CREATE VIEW standings AS
-    SELECT players.id, players.name,
-    (SELECT COUNT(*) FROM matches
-        WHERE matches.winner = players.id) as wins,
-    (SELECT COUNT(*) FROM matches
-        WHERE matches.winner = players.id OR matches.loser = players.id) as total
+    SELECT
+        players.id,
+        players.name,
+        (SELECT COUNT(*) FROM matches
+            WHERE matches.winner = players.id)
+            as wins,
+        (SELECT COUNT(*) FROM matches
+            WHERE matches.winner = players.id OR matches.loser = players.id)
+            as games
     FROM players
-    ORDER BY wins DESC;
-
---SELECT players.name, (SELECT COUNT(*) FROM matches as m WHERE m.winner = players.id) as wins, (SELECT COUNT(*) FROM matches as m WHERE m.winner=players.id OR m.loser = players.id) FROM players ORDER BY wins DESC;
+    ORDER BY
+        wins DESC,
+        games DESC;

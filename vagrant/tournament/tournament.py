@@ -5,6 +5,7 @@
 
 import bleach
 import psycopg2
+from itertools import imap
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
@@ -132,3 +133,16 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    query = "SELECT id, name FROM standings;"
+    rows = fetch(query, None)
+    #           id1         name1       id2         name2
+    return [(pair[0][0], pair[0][1], pair[1][0], pair[0][1])
+        for pair in group2(rows)]
+
+def group2(iterator, count = 2):
+    """ Returns a list of pairs, in order: s -> (s0,s1), (s2, s3), ...
+
+    Extracted from:
+    http://code.activestate.com/recipes/439095-iterator-to-return-items-n-at-a-time/
+    """
+    return imap(None, *([ iter(iterator) ] * count))
