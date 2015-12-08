@@ -110,16 +110,12 @@ def playerStandings():
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
 
+
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    # Check that the inverse (loser, winner) was not previously inserted
-    inverse = "SELECT * FROM matches WHERE winner = %s AND loser = %s;"
-    if fetch(inverse, [loser, winner], True) is not None:
-        raise psycopg2.IntegrityError()
-
-    # Then just do the insert, as the DB can raise a duplicate key error
+    # Just do the insert, as the DB will raise an error if the match exists
     query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
     execute(query, [winner, loser])
 
