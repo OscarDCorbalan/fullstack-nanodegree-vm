@@ -5,7 +5,6 @@
 --
 
 -- DROP existing tables before re-creating them.
-DELETE FROM matches;
 DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS matches;
 
@@ -17,7 +16,10 @@ CREATE TABLE players (
 
 CREATE TABLE matches (
     winner      integer NOT NULL REFERENCES players(id),
-    loser       integer NOT NULL REFERENCES players(id)
+    loser       integer NOT NULL REFERENCES players(id),
+    CHECK (winner != loser), -- winner and loser can't be the same player
+    CHECK (winner > 0),
+    PRIMARY KEY (winner, loser)
 );
 
 CREATE VIEW standings AS

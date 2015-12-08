@@ -124,6 +124,24 @@ def testPairings():
             "After one match, players with one win should be paired.")
     print "8. After one match, players with one win are paired."
 
+def testRematches():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Shaquille O'Neal")
+    registerPlayer("Michael Jordan")
+    standings = playerStandings()
+    [id1, id2] = [row[0] for row in standings]
+    reportMatch(id1, id2)
+    try:
+        reportMatch(id1, id2)
+    except psycopg2.IntegrityError:
+        try:
+            reportMatch(id2, id1)
+        except psycopg2.IntegrityError:
+            print "9. Rematches between players are not allowed."
+    else:
+        raise ValueError(
+            "Rematches between players are allowed.")
 
 if __name__ == '__main__':
     testDeleteMatches()
@@ -134,4 +152,5 @@ if __name__ == '__main__':
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    testRematches()
     print "Success!  All tests pass!"

@@ -114,6 +114,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    # Check that the inverse (loser, winner) was not previously inserted
+    inverse = "SELECT * FROM matches WHERE winner = %s AND loser = %s;"
+    if fetch(inverse, [loser, winner], True) is not None:
+        raise psycopg2.IntegrityError()
+
+    # Then just do the insert, as the DB can raise a duplicate key error
     query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
     execute(query, [winner, loser])
 
@@ -140,7 +146,7 @@ def swissPairings():
         for pair in group2(rows)]
 
 def group2(iterator, count = 2):
-    """ Returns a list of pairs, in order: s -> (s0,s1), (s2, s3), ...
+    """ Returns the list in groups of count elements: s -> (s0,s1), (s2,s3), ...
 
     Extracted from:
     http://code.activestate.com/recipes/439095-iterator-to-return-items-n-at-a-time/
