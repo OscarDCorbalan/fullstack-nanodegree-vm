@@ -22,6 +22,21 @@ CREATE TABLE matches (
     PRIMARY KEY (winner, loser)
 );
 
+--
+-- http://www.postgresql.org/docs/9.2/static/plpgsql-trigger.html
+CREATE OR REPLACE FUNCTION check_inverse_match() RETURNS trigger AS $$
+BEGIN
+    IF EXISTS(SELECT * FROM matches WHERE winner=NEW.loser AND loser=NEW.winner)
+        THEN RAISE 'Key (winner, loser)=(%, %) already exists', NEW.winner, NEW.loser
+        USING ERRCODE = 'unique_violation';
+    END IF;
+    RETURN NEW;
+END;
+$$ language plpgsql;
+
+CREATE TRIGGER check_inverse_match BEFORE INSERT ON matches
+    FOR EACH ROW EXECUTE PROCEDURE check_inverse_match();
+
 CREATE VIEW standings AS
     SELECT
         players.id,
