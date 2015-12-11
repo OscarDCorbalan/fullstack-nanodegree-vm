@@ -173,7 +173,7 @@ def testOddPlayers():
         reportMatch(id5, id6)
         reportMatch(id7, id8)
 
-    print "10. With odd player, last receives a bye and no one receives 2+."
+    print "10. With odd #players, last receives a bye and no one receives 2+."
 
 
 def testTournament():
