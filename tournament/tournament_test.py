@@ -143,6 +143,30 @@ def testRematches():
         raise ValueError(
             "Rematches between players are allowed.")
 
+def testTournament():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("P1")
+    registerPlayer("P2")
+    registerPlayer("P3")
+    registerPlayer("P4")
+    registerPlayer("P5")
+    registerPlayer("P6")
+    registerPlayer("P7")
+    registerPlayer("P8")
+
+    for round in range(1, 4):
+        #print "round", round
+        pairings = swissPairings()
+        [(id1, name1, id2, name2), (id3, name3, id4, name4),
+        (id5, name5, id6, name6), (id7, name7, id8, name8)] = pairings
+        #print name1, name2, name3, name4, name5, name6, name7, name8
+        reportMatch(id1, id2)
+        reportMatch(id3, id4)
+        reportMatch(id5, id6)
+        reportMatch(id7, id8)
+    print "*. Real tournament works."
+
 if __name__ == '__main__':
     testDeleteMatches()
     testDelete()
@@ -153,4 +177,5 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     testRematches()
+    testTournament()
     print "Success!  All tests pass!"

@@ -120,6 +120,14 @@ def reportMatch(winner, loser):
     execute(query, [winner, loser])
 
 
+def playedAgainst(player1, player2):
+    query = """
+        SELECT * FROM matches WHERE
+        (winner = %s AND loser = %s) OR (loser = %s AND winner = %s);
+        """
+    return fetch(query, [player1, player2, player2, player1], True) is not None
+
+
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
 
@@ -135,11 +143,10 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    query = "SELECT id, name FROM standings;"
+    query = "SELECT id, name, wins, games FROM standings;"
     rows = fetch(query, None)
     #           id1         name1       id2         name2
-    return [(pair[0][0], pair[0][1], pair[1][0], pair[0][1])
-        for pair in group2(rows)]
+    return group(rows)
 
 def group2(iterator, count = 2):
     """ Returns the list in groups of count elements: s -> (s0,s1), (s2,s3), ...
@@ -148,3 +155,19 @@ def group2(iterator, count = 2):
     http://code.activestate.com/recipes/439095-iterator-to-return-items-n-at-a-time/
     """
     return imap(None, *([ iter(iterator) ] * count))
+
+def group(players):
+    pairs = []
+    i = 0
+    while i < len(players):
+        p = players[i]
+        i = i + 1
+        for j in range(i, len(players)):
+            q = players[j]
+            if not playedAgainst(p[0], q[0]):
+                players.remove(p)
+                players.remove(q)
+                pairs.append((p[0], p[1], q[0], q[1]) )
+                i = 0
+                break;
+    return pairs
