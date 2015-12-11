@@ -87,8 +87,8 @@ def testReportMatches():
     registerPlayer("Diane Grant")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
+    reportMatch(id1, id2, id1)
+    reportMatch(id3, id4, id3)
     standings = playerStandings()
     for (i, n, w, m) in standings:
         if m != 1:
@@ -108,8 +108,8 @@ def testPairings():
     registerPlayer("Pinkie Pie")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
+    reportMatch(id1, id2, id1)
+    reportMatch(id3, id4, id3)
     pairings = swissPairings()
     if len(pairings) != 2:
         raise ValueError(
@@ -129,12 +129,12 @@ def testRematches():
     registerPlayer("Michael Jordan")
     standings = playerStandings()
     [id1, id2] = [row[0] for row in standings]
-    reportMatch(id1, id2)
+    reportMatch(id1, id2, id1)
     try:
-        reportMatch(id1, id2)
+        reportMatch(id1, id2, id1)
     except psycopg2.IntegrityError:
         try:
-            reportMatch(id2, id1)
+            reportMatch(id2, id1, id2)
         except psycopg2.IntegrityError:
             print "9. Rematches between players are not allowed."
     else:
@@ -168,12 +168,31 @@ def testOddPlayers():
             if last[1] != "Andres Iniesta":
                 raise ValueError("Last player didn't get a bye.")
 
-        reportMatch(id1, id2)
-        reportMatch(id3, id4)
-        reportMatch(id5, id6)
-        reportMatch(id7, id8)
+        reportMatch(id1, id2, id1)
+        reportMatch(id3, id4, id3)
+        reportMatch(id5, id6, id5)
+        reportMatch(id7, id8, id7)
 
     print "10. With odd #players, last receives a bye and no one receives 2+."
+
+
+def testDraws():
+    resetTables()
+    registerPlayer("Pencil")
+    registerPlayer("Rubber")
+
+    standings = playerStandings()
+    [id1, id2] = [row[0] for row in standings]
+    reportMatch(id1, id2, None)
+
+    standings = playerStandings()
+    [(id1, name1, wins1, games1), (id2, name2, wins2, games2)] = standings
+    if wins1 == 1 or wins2 == 1:
+        raise ValueError("Draws shouldn't count as a win.")
+    if games1 == 0 or games2 == 0:
+        raise ValueError("Draws should count as a played game.")
+
+    print "11. Matches can result in a draw."
 
 
 def testTournament():
@@ -210,5 +229,6 @@ if __name__ == '__main__':
     testPairings()
     testRematches()
     testOddPlayers()
+    testDraws()
     #testTournament()
     print "Success!  All tests pass!"

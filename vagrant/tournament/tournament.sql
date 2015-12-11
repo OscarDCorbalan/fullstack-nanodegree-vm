@@ -16,10 +16,12 @@ CREATE TABLE players (
 );
 
 CREATE TABLE matches (
-    winner      integer NOT NULL REFERENCES players(id),
-    loser       integer NOT NULL REFERENCES players(id),
-    CHECK (winner != loser),
-    PRIMARY KEY (winner, loser)
+    player1     integer NOT NULL REFERENCES players(id),
+    player2     integer NOT NULL REFERENCES players(id),
+    winner      integer REFERENCES players(id),
+    CHECK (player1 != player2),
+    CHECK (winner = player1 OR winner = player2 OR winner = NULL),
+    PRIMARY KEY (player1, player2)
 ); -- plus check the trigger on this table at the bottom
 
 
@@ -36,7 +38,7 @@ CREATE VIEW standings AS
         + (SELECT COUNT(*) FROM byes WHERE byes.player = players.id)     --bye
             as wins,
         (SELECT COUNT(*) FROM matches
-            WHERE matches.winner = players.id OR matches.loser = players.id)
+            WHERE matches.player1 = players.id OR matches.player2 = players.id)
             as games,
         (SELECT COUNT(*) FROM byes WHERE byes.player = players.id)
             as bye --not needed but useful
@@ -51,8 +53,12 @@ CREATE VIEW standings AS
 -- Trigger info: http://www.postgresql.org/docs/9.2/static/plpgsql-trigger.html
 CREATE OR REPLACE FUNCTION check_inverse_match() RETURNS trigger AS $$
 BEGIN
-    IF EXISTS(SELECT * FROM matches WHERE winner=NEW.loser AND loser=NEW.winner)
-        THEN RAISE 'Key (winner, loser)=(%, %) already exists', NEW.loser, NEW.winner
+    IF EXISTS(SELECT *
+            FROM matches
+            WHERE player1=NEW.player2
+            AND player2=NEW.player1)
+        THEN RAISE 'Key (player1, player2)=(%, %) already exists',
+            NEW.player2, NEW.player1
         USING ERRCODE = 'unique_violation';
     END IF;
     RETURN NEW;

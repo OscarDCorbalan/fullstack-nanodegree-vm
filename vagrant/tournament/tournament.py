@@ -111,23 +111,23 @@ def playerStandings():
             int(row[3])
             ) for row in rows]
 
-def reportMatch(winner, loser):
+def reportMatch(player1, player2, winner):
     """Records the outcome of a single match between two players.
 
-
     Args:
-      winner:  the id number of the player who won
-      loser:  the id number of the player who lost
+      player1: the id number of one of the players
+      player2: the id number of the other player
+      winner:  the id number of the player who won, or None if a draw
     """
     # Just do the insert, as the DB will raise an error if the match exists
-    query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
-    execute(query, [winner, loser])
+    query = "INSERT INTO matches(player1, player2, winner) VALUES(%s, %s, %s);"
+    execute(query, [player1, player2, winner])
 
 
 def playedAgainst(player1, player2):
     query = """
         SELECT * FROM matches WHERE
-        (winner = %s AND loser = %s) OR (loser = %s AND winner = %s);
+        (player1 = %s AND player2 = %s) OR (player2 = %s AND player1 = %s);
         """
     return fetch(query, [player1, player2, player2, player1], True) is not None
 
