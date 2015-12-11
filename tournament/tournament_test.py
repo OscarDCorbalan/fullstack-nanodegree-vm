@@ -4,20 +4,23 @@
 
 from tournament import *
 
+def resetTables():
+    deleteByes()
+    deleteMatches()
+    deletePlayers()
+
 def testDeleteMatches():
     deleteMatches()
     print "1. Old matches can be deleted."
 
 
 def testDelete():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     print "2. Player records can be deleted."
 
 
 def testCount():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     c = countPlayers()
     if c == '0':
         raise TypeError(
@@ -28,8 +31,7 @@ def testCount():
 
 
 def testRegister():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Chandra Nalaar")
     c = countPlayers()
     if c != 1:
@@ -39,8 +41,7 @@ def testRegister():
 
 
 def testRegisterCountDelete():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Markov Chaney")
     registerPlayer("Joe Malik")
     registerPlayer("Mao Tsu-hsi")
@@ -57,8 +58,7 @@ def testRegisterCountDelete():
 
 
 def testStandingsBeforeMatches():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Melpomene Murray")
     registerPlayer("Randy Schwartz")
     standings = playerStandings()
@@ -80,8 +80,7 @@ def testStandingsBeforeMatches():
 
 
 def testReportMatches():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Bruno Walton")
     registerPlayer("Boots O'Neal")
     registerPlayer("Cathy Burton")
@@ -102,8 +101,7 @@ def testReportMatches():
 
 
 def testPairings():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Twilight Sparkle")
     registerPlayer("Fluttershy")
     registerPlayer("Applejack")
@@ -124,9 +122,9 @@ def testPairings():
             "After one match, players with one win should be paired.")
     print "8. After one match, players with one win are paired."
 
+
 def testRematches():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("Shaquille O'Neal")
     registerPlayer("Michael Jordan")
     standings = playerStandings()
@@ -143,9 +141,43 @@ def testRematches():
         raise ValueError(
             "Rematches between players are allowed.")
 
+
+def testOddPlayers():
+    resetTables()
+    registerPlayer("Lionel Messi")
+    registerPlayer("Cristiano Ronaldo")
+    registerPlayer("Arjen Robben")
+    registerPlayer("Zlatan Ibrahimovic")
+    registerPlayer("Franz Beckenbauer")
+    registerPlayer("Andres Iniesta")
+    registerPlayer("James Rodriguez")
+    registerPlayer("Manuel Neuer")
+    registerPlayer("Andres Iniesta")
+
+    firstRound = True;
+    # Any second bye to the same player would throw a duplicate key error
+    for round in range(1, 3):
+        pairings = swissPairings()
+        [(id1, name1, id2, name2), (id3, name3, id4, name4),
+        (id5, name5, id6, name6), (id7, name7, id8, name8)] = swissPairings()
+
+        # In 1st round he's the first since no one else still reported a match
+        if firstRound:
+            firstRound = False
+            last = playerStandings()[0]
+            if last[1] != "Andres Iniesta":
+                raise ValueError("Last player didn't get a bye.")
+
+        reportMatch(id1, id2)
+        reportMatch(id3, id4)
+        reportMatch(id5, id6)
+        reportMatch(id7, id8)
+
+    print "10. With odd player, last receives a bye and no one receives 2+."
+
+
 def testTournament():
-    deleteMatches()
-    deletePlayers()
+    resetTables()
     registerPlayer("P1")
     registerPlayer("P2")
     registerPlayer("P3")
@@ -177,5 +209,6 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     testRematches()
-    testTournament()
+    testOddPlayers()
+    #testTournament()
     print "Success!  All tests pass!"

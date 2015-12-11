@@ -5,7 +5,6 @@
 
 import bleach
 import psycopg2
-from itertools import imap
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
@@ -55,6 +54,11 @@ def fetch(query, values, singlerow = False):
     conn.close()
 
     return rows
+
+def deleteByes():
+    """Remove all the bye records from the database."""
+    query = "DELETE FROM byes;"
+    execute(query, None)
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -145,16 +149,19 @@ def swissPairings():
     """
     query = "SELECT id, name, wins, games FROM standings;"
     rows = fetch(query, None)
-    #           id1         name1       id2         name2
+
+    # Assign a bye to last player if number of players is odd
+    if len(rows) % 2 != 0:
+        lastPlayer = rows[-1]
+        del rows[-1] # remove it from the list
+        assignBye(lastPlayer[0])
+        # Uncomment to test we can't assign 2 byes to same player:
+        #assignBye(lastPlayer[0])
     return group(rows)
 
-def group2(iterator, count = 2):
-    """ Returns the list in groups of count elements: s -> (s0,s1), (s2,s3), ...
-
-    Extracted from:
-    http://code.activestate.com/recipes/439095-iterator-to-return-items-n-at-a-time/
-    """
-    return imap(None, *([ iter(iterator) ] * count))
+def assignBye(idPlayer):
+    query = "INSERT INTO byes (player) VALUES (%s);"
+    execute(query, [idPlayer])
 
 def group(players):
     pairs = []
@@ -167,7 +174,8 @@ def group(players):
             if not playedAgainst(p[0], q[0]):
                 players.remove(p)
                 players.remove(q)
-                pairs.append((p[0], p[1], q[0], q[1]) )
+                #              id1, name1, id2, name2
+                pairs.append((p[0], p[1], q[0], q[1]))
                 i = 0
                 break;
     return pairs
