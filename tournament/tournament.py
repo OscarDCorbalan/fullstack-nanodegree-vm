@@ -96,19 +96,21 @@ def playerStandings():
     tied for first place if there is currently a tie.
 
     Returns:
-      A list of tuples, each of which contains (id, name, wins, matches):
+      A list of tuples, each of which contains (id, name, wins, matches, omw):
         id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
         wins: the number of matches the player has won
         matches: the number of matches the player has played
+        omw: opponent match wins, #wins by players they have played against
     """
-    query = "SELECT * FROM standings;"
+    query = "SELECT id, name, wins, games, omw FROM standings;"
     rows = fetch(query, None)
     return [(
             int(row[0]),
             str(bleach.clean(row[1])),
             int(row[2]),
-            int(row[3])
+            int(row[3]),
+            int(row[4])
             ) for row in rows]
 
 def reportMatch(player1, player2, winner):
