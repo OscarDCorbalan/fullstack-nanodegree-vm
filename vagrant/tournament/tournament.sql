@@ -30,22 +30,51 @@ CREATE TABLE byes (
     player      integer UNIQUE NOT NULL REFERENCES players(id)
 );
 
-CREATE VIEW standings AS
+
+-- VIEWS
+
+-- number of wins by player
+CREATE VIEW playerWins AS
+    SELECT players.id as id,
+        -- sum real wins and bye, if any
+        (SELECT COUNT(*) FROM matches WHERE matches.winner = players.id)
+        + (SELECT COUNT(*) FROM byes WHERE byes.player = players.id)
+        as wins
+    FROM players;
+
+-- number of games by player
+CREATE VIEW playerGames AS
+    SELECT players.id as id,
+    (SELECT COUNT(*) FROM matches
+        WHERE matches.player1 = players.id OR matches.player2 = players.id)
+        as games
+    FROM players;
+
+-- number of OMW by player
+CREATE VIEW playerOMWs AS
     SELECT
-        players.id,
-        players.name,
-        (SELECT COUNT(*) FROM matches WHERE matches.winner = players.id) --real
-        + (SELECT COUNT(*) FROM byes WHERE byes.player = players.id)     --bye
-            as wins,
-        (SELECT COUNT(*) FROM matches
-            WHERE matches.player1 = players.id OR matches.player2 = players.id)
-            as games,
-        (SELECT COUNT(*) FROM byes WHERE byes.player = players.id)
-            as bye --not needed but useful
-    FROM players
-    ORDER BY
-        wins DESC,
-        games DESC;
+        m.winner AS id,
+        SUM(wins) AS omws
+    FROM matches AS m
+    LEFT JOIN playerWins AS pw
+    ON pw.id IN (m.player1, m.player2) AND pw.id != m.winner
+    GROUP BY m.winner;
+
+CREATE VIEW standings AS
+SELECT
+    players.id as id,
+    players.name as name,
+    (SELECT wins from playerWins WHERE players.id = playerWins.id) as wins,
+    (SELECT games from playerGames WHERE players.id = playerGames.id) as games,
+    COALESCE( -- there's no row when a player has omw=0, so default it to 0
+        (SELECT omws from playerOMWs WHERE players.id = playerOMWs.id), 0
+    ) as omw
+FROM players
+ORDER BY
+    wins DESC,
+    omw DESC,
+    games DESC;
+
 
 -- TRIGGERS
 

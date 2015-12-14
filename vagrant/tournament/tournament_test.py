@@ -67,9 +67,11 @@ def testStandingsBeforeMatches():
                          "they have played any matches.")
     elif len(standings) > 2:
         raise ValueError("Only registered players should appear in standings.")
-    if len(standings[0]) != 4:
+    if len(standings[0]) != 5:
         raise ValueError("Each playerStandings row should have four columns.")
-    [(id1, name1, wins1, matches1), (id2, name2, wins2, matches2)] = standings
+    [(id1, name1, wins1, matches1, omw1),
+        (id2, name2, wins2, matches2, omw2)] = standings
+
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
             "Newly registered players should have no matches or wins.")
@@ -90,7 +92,7 @@ def testReportMatches():
     reportMatch(id1, id2, id1)
     reportMatch(id3, id4, id3)
     standings = playerStandings()
-    for (i, n, w, m) in standings:
+    for (i, n, w, m, o) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
         if i in (id1, id3) and w != 1:
@@ -181,12 +183,12 @@ def testDraws():
     registerPlayer("Pencil")
     registerPlayer("Rubber")
 
-    standings = playerStandings()
-    [id1, id2] = [row[0] for row in standings]
+    [id1, id2] = [row[0] for row in playerStandings()]
     reportMatch(id1, id2, None)
 
-    standings = playerStandings()
-    [(id1, name1, wins1, games1), (id2, name2, wins2, games2)] = standings
+    [(id1, name1, wins1, games1, omw1),
+    (id2, name2, wins2, games2, omw2)] = playerStandings()
+
     if wins1 == 1 or wins2 == 1:
         raise ValueError("Draws shouldn't count as a win.")
     if games1 == 0 or games2 == 0:
@@ -194,29 +196,45 @@ def testDraws():
 
     print "11. Matches can result in a draw."
 
-
-def testTournament():
+def testOpponentMatchWins():
     resetTables()
     registerPlayer("P1")
     registerPlayer("P2")
     registerPlayer("P3")
     registerPlayer("P4")
-    registerPlayer("P5")
-    registerPlayer("P6")
-    registerPlayer("P7")
-    registerPlayer("P8")
 
-    for round in range(1, 4):
-        #print "round", round
-        pairings = swissPairings()
-        [(id1, name1, id2, name2), (id3, name3, id4, name4),
-        (id5, name5, id6, name6), (id7, name7, id8, name8)] = pairings
-        #print name1, name2, name3, name4, name5, name6, name7, name8
-        reportMatch(id1, id2)
-        reportMatch(id3, id4)
-        reportMatch(id5, id6)
-        reportMatch(id7, id8)
-    print "*. Real tournament works."
+    # Round 1, check everyone ends with 0 omws
+    pairings = swissPairings()
+    [(id1, name1, id2, name2), (id3, name3, id4, name4)] = pairings
+    reportMatch(id1, id2, id1)
+    reportMatch(id3, id4, id3)
+
+    if any(row[4]!=0 for row in playerStandings()):
+        raise ValueError("Bad OMW count. All players should have 0.")
+
+    # Round 2, first player has 2 omws and the rest none
+    pairings = swissPairings()
+    [(id1, name1, id2, name2), (id3, name3, id4, name4)] = pairings
+    reportMatch(id1, id2, id1)
+    reportMatch(id3, id4, id3)
+
+    if [2, 0, 0, 0] != [row[4] for row in playerStandings()]:
+        raise ValueError("Bad OMW count. Correct is [P1,P2,P3,P4]=[2,0,0,0].")
+
+    # Round 3, check final omw count and its use in undoing ties
+    pairings = swissPairings()
+    [(id1, name1, id2, name2), (id3, name3, id4, name4)] = pairings
+    reportMatch(id1, id2, id2)
+    reportMatch(id3, id4, id3)
+
+    standings = playerStandings()
+    if [3, 2, 2, 1] != [row[4] for row in standings]:
+        raise ValueError("Bad OMW count. Correct is [P1,P2,P3,P4]=[3,2,2,1].")
+
+    if ["P1", "P2", "P4", "P3"] != [row[1] for row in standings]:
+        raise ValueError("OMW is not taken into account on ties.")
+
+    print "12. When 2 players have the same #wins, rank them according to OMW."
 
 if __name__ == '__main__':
     testDeleteMatches()
@@ -230,5 +248,5 @@ if __name__ == '__main__':
     testRematches()
     testOddPlayers()
     testDraws()
-    #testTournament()
+    testOpponentMatchWins()
     print "Success!  All tests pass!"
