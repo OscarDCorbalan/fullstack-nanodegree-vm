@@ -42,7 +42,7 @@ Within the download you'll find the following directories and files, logically g
 └── README.md                   This file  
 ```
 
-# Test cases covered
+# Test cases (strikethrough means implemented)
 
 1. ~~Old matches can be deleted.~~
 2. ~~Player records can be deleted.~~
