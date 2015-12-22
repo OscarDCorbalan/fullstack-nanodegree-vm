@@ -44,7 +44,7 @@ CREATE TABLE matches (
     CHECK (winner = player1 OR winner = player2 OR winner = NULL),
 
     -- compund key avoids repeating (T+P1+P2), but not inserting (T+P2+P1)
-    -- we avoid that case with the trigger on this table at the bottom
+    -- we avoid this second case with the trigger below
     PRIMARY KEY (tournament, player1, player2),
 
     -- These compound FK make sure players are registered into the tournament
