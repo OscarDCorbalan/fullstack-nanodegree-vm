@@ -4,6 +4,11 @@
 -- statements if you choose to use it.
 --
 
+-- Regenerate the DB and connect
+DROP DATABASE IF EXISTS tournament;
+CREATE DATABASE tournament;
+\c tournament;
+
 -- DROP existing tables before re-creating them.
 DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS tournaments CASCADE;
