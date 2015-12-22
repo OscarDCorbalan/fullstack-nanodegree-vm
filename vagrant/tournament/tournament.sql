@@ -76,7 +76,7 @@ END;
 $$ language plpgsql;
 
 CREATE TRIGGER check_match BEFORE INSERT ON matches
-    FOR EACH ROW EXECUTE PROCEDURE check_inverse_match();
+    FOR EACH ROW EXECUTE PROCEDURE check_match();
 
 
 -- VIEWS
