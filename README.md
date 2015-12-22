@@ -25,7 +25,7 @@ To run the project tests, follow these steps:
 5. SSH into the machine with the username `vagrant`. Depending on your OS:
   * **NOT** Windows: just run `vagrant ssh`.
   * Windows: Running `vagrant ssh` will mourn that it's not possible and provide you an IP/port to log in. So, to log in download [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) and follow the instructions [found here](https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY), which basically explain how to use the Vagrant VM certificate in PuTTY.
-6. Once inside the VM, run 'cd /vagrant/tournament'.
+6. Once inside the VM, run `cd /vagrant/tournament`.
 7. Once inside the folder, run `python tournament_test.py`
 
 # What's included
