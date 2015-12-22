@@ -5,8 +5,9 @@ _This project is part of Udacity's Full Stack Developer Nanodegree._
 This project consists in implementing a **Python** module that uses a **PostgreSQL** database to keep track of players and matches in a game tournament, having two parts:
   * (**tournament.sql**) Defining the database schema (SQL table definitions).
   * (**tournament.py** ) Writing the code that will use it.
+  * (**tournament_test.py**) Writing tests for the code in tournament.py.
 
-Note that a TDD approach is used. See **tournament_test.sql**.
+Note that a TDD (Test-Driven Development) approach is used. The tests are located in **tournament_test.sql**.
 
 The game tournament uses the Swiss system for pairing up players in each round: players are not eliminated, and each player should be paired with another player with the same number of wins, or as close as possible.
 
