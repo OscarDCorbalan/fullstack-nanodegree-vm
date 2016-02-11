@@ -1,3 +1,6 @@
+**TODO**: project indexed links
+**TODO**: merge restaurants README file here
+
 # Tournament Planner
 
 _This project is part of Udacity's Full Stack Developer Nanodegree._
