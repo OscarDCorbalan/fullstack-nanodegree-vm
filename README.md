@@ -2,7 +2,5 @@ _This repo contains various projects part of Udacity's Full Stack Developer Nano
 
 # Projects index
 
-* [Tournament Planner](https://github.com/OscarDoc/fullstack-nanodegree-vm/tree/master/vagrant/tournament).
-* [Restaurants](https://github.com/OscarDoc/fullstack-nanodegree-vm/tree/master/vagrant/restaurants).
-
-**TODO**: merge restaurants README into subfolder
+* [Tournament Planner](https://github.com/OscarDoc/fullstack-nanodegree-vm/tree/master/vagrant/tournament): Bootstrap + Python + PostgreSQL.
+* [Restaurants](https://github.com/OscarDoc/fullstack-nanodegree-vm/tree/master/vagrant/restaurants): Python + SQLite.
