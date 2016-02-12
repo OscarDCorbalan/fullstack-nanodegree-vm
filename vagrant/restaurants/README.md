@@ -2,7 +2,7 @@
 
 _This project is part of Udacity's Full Stack Developer Nanodegree._
 
-This project consists in implementing **Python** modules that use a **SQLite** database.
+This project consists in implementing **Python** modules that use **SQLAlchemy** with **SQLite** databases.
 
 **TODO**
 
