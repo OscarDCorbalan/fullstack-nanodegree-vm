@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Date, Numeric
+from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -27,7 +27,7 @@ class Puppy(Base):
     shelter_id = Column(Integer, ForeignKey('shelter.id'))
     shelter = relationship(Shelter)
     profile = relationship("PuppyProfile", uselist = False, back_populates="puppy")
-
+    adopters = relationship("PuppyAdopterLink")
 
 # EXERCICE 3
 
@@ -45,14 +45,19 @@ class PuppyProfile(Base):
     puppy = relationship("Puppy", back_populates="profile")
 
 # 2. Puppies can be adopted by one person, or a family of people. Similarly, a
-# person or family can adopt one or several puppies. See if you can create a
-# many-to-many relationship between puppies and adopters
+# person or family can adopt one or several puppies. Create a many-to-many
+# relationship between puppies and adopters
 
 class Adopter(Base):
     __tablename__ = 'adopter'
     id = Column(Integer, primary_key = True)
-    name = Column(String(250))
+    name = Column(String(20))
 
+class PuppyAdopterLink(Base):
+    __tablename__ = 'puppy_adopter_link'
+    puppy_id = Column(Integer, ForeignKey('puppy.id'), primary_key=True)
+    adopter_id = Column(Integer, ForeignKey('adopter.id'), primary_key=True)
+    adopter = relationship("Adopter")
 
 
 engine = create_engine('sqlite:///puppyshelter.db')

@@ -43,9 +43,25 @@ def getPuppiesInShelter(shelter):
             .all()
 
 # EXERCISE 3 (associations)
+# 3.1. Puppy have profiles
 def getPuppyProfile(puppy):
     return session.query(PuppyProfile).filter(PuppyProfile.puppy == puppy).one()
 
+# 3.2. Puppies can be adopted
+def adoptPuppy(puppy_id, adopter_list_ids):
+    puppy = session.query(Puppy).filter(Puppy.id == puppy_id).one()
+    puppy.shelter_id = None
+
+    for adopter in adopter_list_ids:
+        adoption_link = PuppyAdopterLink(adopter_id = adopter, puppy_id = puppy.id)
+        session.add(adoption_link)
+    session.add(puppy)
+    session.commit()
+
+    print puppy.name, "adopted by:"
+    for link in puppy.adopters:
+        adopter = session.query(Adopter).filter(Adopter.id == link.adopter_id).one()
+        print " -", adopter.name
 
 print "1. All puppies in alphabetical order:"
 for puppy in getAllPuppies():
@@ -69,3 +85,8 @@ print "5. Puppies with profiles"
 for puppy in getAllPuppies():
     profile = getPuppyProfile(puppy)
     print puppy.name, profile.picture
+
+print "6. Adopted puppies"
+adoptPuppy(1, [1])
+adoptPuppy(2, [2,3,4])
+adoptPuppy(3, [2,3,4])
