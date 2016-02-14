@@ -72,6 +72,22 @@ def get_shelter_capacity(shelter_id):
 	return session.query(Shelter.maximum_capacity).filter(Shelter.id == shelter_id).one()
 
 
+# EXERCISE 5 (add puppies to shelters checking occupancy)
+def add_puppy_to_shelter(puppy_id, shelter_id):
+    occupancy = get_shelter_occupancy(shelter_id)
+    capacity = get_shelter_capacity(shelter_id)
+    if(occupancy < capacity):
+        sheltered_puppy = session.query(Puppy).filter(Puppy.id == puppy_id).one()
+        sheltered_puppy.shelter_id = shelter_id
+        session.add(sheltered_puppy)
+        session.commit()
+        print "Puppy added to shelter."
+    else:
+        unsheletered_puppy = session.query(Puppy).filter(Puppy.id == puppy_id).one()
+        print '%s has been put to sleep.' % unsheletered_puppy.name
+        session.delete(unsheletered_puppy)
+        session.commit()
+
 
 print "1. All puppies in alphabetical order:"
 for puppy in get_all_puppies():
@@ -108,5 +124,10 @@ adopt_puppy(4, [5])
 adopt_puppy(5, [6])
 
 print "7. Shelter occupancies AFTER adoptions:"
+for shelter in get_shelters():
+    print shelter.name, ":", get_shelter_occupancy(shelter.id)
+
+add_puppy_to_shelter(2,1)
+print "7. Shelter occupancies AFTER adding puppy to shelter:"
 for shelter in get_shelters():
     print shelter.name, ":", get_shelter_occupancy(shelter.id)
