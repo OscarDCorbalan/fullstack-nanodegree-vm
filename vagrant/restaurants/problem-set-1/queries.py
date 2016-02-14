@@ -63,6 +63,15 @@ def adoptPuppy(puppy_id, adopter_list_ids):
         adopter = session.query(Adopter).filter(Adopter.id == link.adopter_id).one()
         print " -", adopter.name
 
+
+# EXERCISE 4 (shelter occupancy)
+def getShelterOccupancy(shelter_id):
+	return session.query(Puppy, Shelter).join(Shelter).filter(Shelter.id == shelter_id).count()
+
+def getShelterCapacity(shelter_id):
+	return session.query(Shelter.maximum_capacity).filter(Shelter.id == shelter_id).one()
+
+
 print "1. All puppies in alphabetical order:"
 for puppy in getAllPuppies():
     print puppy.name
@@ -86,7 +95,15 @@ for puppy in getAllPuppies():
     profile = getPuppyProfile(puppy)
     print puppy.name, profile.picture
 
+print "7. Shelter occupancies:"
+for shelter in getShelters():
+    print shelter.name, ":", getShelterOccupancy(shelter.id)
+    
 print "6. Adopted puppies"
 adoptPuppy(1, [1])
 adoptPuppy(2, [2,3,4])
 adoptPuppy(3, [2,3,4])
+
+print "7. Shelter occupancies:"
+for shelter in getShelters():
+    print shelter.name, ":", getShelterOccupancy(shelter.id)
