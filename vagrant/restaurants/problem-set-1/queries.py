@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker
 
-from puppies import Base, Shelter, Puppy
+from puppies import Base, Shelter, Puppy, PuppyProfile
 #from flask.ext.sqlalchemy import SQLAlchemy
 from random import randint
 import datetime
@@ -14,6 +14,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
+# EXERCISE 2 (queries)
 
 # 1. Query all of the puppies and return the results in ascending alphabetical order
 print "1. All puppies in alphabetical order"
@@ -56,3 +58,15 @@ for shelter in shelters:
                 .all()
     for puppy in puppies:
         print " -", puppy.name
+
+
+# EXERCISE 3 (associations)
+print "5. All puppies in alphabetical order"
+puppies = session.query(Puppy)\
+            .order_by(asc(Puppy.name))\
+            .all()
+for puppy in puppies:
+    profile = session.query(PuppyProfile)\
+                .filter(PuppyProfile.puppy == puppy)\
+                .one()
+    print puppy.name, profile.picture
