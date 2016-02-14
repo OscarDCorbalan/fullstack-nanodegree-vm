@@ -46,14 +46,14 @@ adopters = ["Smith", "Anderson", "Clark", "Wright", "Mitchell", "Johnson", "Thom
 
 
 #This method will make a random age for each puppy between 0-18 months(approx.) old from the day the algorithm was run.
-def CreateRandomAge():
+def create_random_age():
 	today = datetime.date.today()
 	days_old = randint(0,540)
 	birthday = today - datetime.timedelta(days = days_old)
 	return birthday
 
 #This method will create a random weight between 1.0-40.0 pounds (or whatever unit of measure you prefer)
-def CreateRandomWeight():
+def create_random_weight():
 	return random.uniform(1.0, 40.0)
 
 for i,x in enumerate(adopters):
@@ -62,13 +62,13 @@ for i,x in enumerate(adopters):
 	session.commit()
 
 for i,x in enumerate(male_names):
-	new_puppy = Puppy(name = x, gender = "male", dateOfBirth = CreateRandomAge(), shelter_id=randint(1,5), weight = CreateRandomWeight())
+	new_puppy = Puppy(name = x, gender = "male", dateOfBirth = create_random_age(), shelter_id=randint(1,5), weight = create_random_weight())
 	new_profile = PuppyProfile(picture = random.choice(puppy_images), puppy = new_puppy)
 	session.add_all([new_puppy, new_profile])
 	session.commit()
 
 for i,x in enumerate(female_names):
-	new_puppy = Puppy(name = x, gender = "female", dateOfBirth = CreateRandomAge(), shelter_id=randint(1,5), weight = CreateRandomWeight())
+	new_puppy = Puppy(name = x, gender = "female", dateOfBirth = create_random_age(), shelter_id=randint(1,5), weight = create_random_weight())
 	new_profile = PuppyProfile(picture = random.choice(puppy_images), puppy = new_puppy)
 	session.add_all([new_puppy, new_profile])
 	session.commit()
