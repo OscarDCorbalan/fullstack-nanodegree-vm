@@ -12,11 +12,14 @@ class RestaurantDAO():
         self.session = DBSession()
 
 
-
     def close(self):
         #print "closing connection"
         self.session.close()
-        
+
+
+    def get_first_restaurant(self):
+        return self.session.query(Restaurant).first()
+
 
     def get_all_restaurants(self):
         return self.session.query(Restaurant).all()
@@ -45,3 +48,22 @@ class RestaurantDAO():
         if restaurant:
             self.session.delete(restaurant)
             self.session.commit()
+
+
+
+class MenuItemDAO():
+
+    def __init__(self):
+        engine = create_engine('sqlite:///restaurantmenu.db')
+        Base.metadata.bind = engine
+        DBSession = sessionmaker(bind=engine)
+        self.session = DBSession()
+
+    
+    def close(self):
+        #print "closing connection"
+        self.session.close()
+
+
+    def get_menu_by_restaurant(self, rest_id):
+        return self.session.query(MenuItem).filter_by(restaurant_id = rest_id)
