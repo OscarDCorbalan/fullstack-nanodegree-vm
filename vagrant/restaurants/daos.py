@@ -56,18 +56,6 @@ class RestaurantDAO(GenericDAO):
 
 class MenuItemDAO(GenericDAO):
 
-    def __init__(self):
-        engine = create_engine('sqlite:///restaurantmenu.db')
-        Base.metadata.bind = engine
-        DBSession = sessionmaker(bind=engine)
-        self.session = DBSession()
-
-    
-    def close(self):
-        #print "closing connection"
-        self.session.close()
-
-
     def get_menu(self, menu_id):
         return self.session.query(MenuItem).filter_by(id=menu_id).one()
 
