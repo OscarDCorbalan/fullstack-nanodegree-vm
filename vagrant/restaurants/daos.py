@@ -76,3 +76,10 @@ class MenuItemDAO(GenericDAO):
         new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
         self.session.add(new_menu)
         self.session.commit()
+
+
+    def delete_menu(self, menu_id):
+        menu = self.get_menu(menu_id)
+        if menu:
+            self.session.delete(menu)
+            self.session.commit()

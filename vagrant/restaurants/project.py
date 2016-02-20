@@ -47,9 +47,15 @@ def edit_menu_item(restaurant_id, menu_id):
 	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/')
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
-	return "page to delete a menu item. Task 3 complete!"
+	if request.method == 'GET':
+		menu = mnu_dao.get_menu(menu_id)
+		return render_template('deletemenuitem.html', menu = menu)
+
+	# Else it's a POST
+	mnu_dao.delete_menu(menu_id)
+	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
 if __name__ == '__main__':
