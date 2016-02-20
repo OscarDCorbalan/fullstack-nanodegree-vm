@@ -34,9 +34,11 @@ def new_menu_item(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
+		menu = mnu_dao.get_menu(menu_id)
 		return render_template('editmenuitem.html',
 								restaurant_id = restaurant_id,
-								menu_id = menu_id)
+								menu_id = menu_id,
+								menu_name = menu.name)
 
 	# Else it's a POST
 	new_name = request.form['name']
