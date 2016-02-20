@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from daos import RestaurantDAO, MenuItemDAO
 
 app = Flask(__name__)
-
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
+
 
 @app.route('/')
 def HelloWorld():
@@ -27,10 +27,10 @@ def new_menu_item(restaurant_id):
 	# Else it's a POST
 	new_name = request.form['name']
 	mnu_dao.add_menu_item(restaurant_id, new_name)
+	flash("New menu item created")
+
 	return redirect(
 		url_for('restaurant_menu', restaurant_id = restaurant_id))
-
-		
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
@@ -44,6 +44,7 @@ def edit_menu_item(restaurant_id, menu_id):
 	# Else it's a POST
 	new_name = request.form['name']
 	mnu_dao.set_menu_name(menu_id, new_name)
+	flash("Menu item succesfully edited")
 	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
@@ -55,9 +56,11 @@ def delete_menu_item(restaurant_id, menu_id):
 
 	# Else it's a POST
 	mnu_dao.delete_menu(menu_id)
+	flash("Menu item deleted")
 	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
 if __name__ == '__main__':
+	app.secret_key = 'super_insecure_key'
 	app.debug = True
 	app.run(host = '0.0.0.0', port = 5000)
