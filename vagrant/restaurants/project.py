@@ -21,24 +21,25 @@ def restaurant_menu(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
-	if request.method == 'POST':
-		new_name = request.form['name']
-		mnu_dao.add_menu_item(restaurant_id, new_name)
-		return redirect(
-			url_for('restaurant_menu', restaurant_id = restaurant_id))
-
-	else:
+	if request.method == 'GET':
 		return render_template('newmenuitem.html', restaurant_id = restaurant_id)
+	
+	# Else it's a POST
+	new_name = request.form['name']
+	mnu_dao.add_menu_item(restaurant_id, new_name)
+	return redirect(
+		url_for('restaurant_menu', restaurant_id = restaurant_id))
+
+		
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
-		menu = mnu_dao.get_menu(menu_id)
 		return render_template('editmenuitem.html',
 								restaurant_id = restaurant_id,
 								menu_id = menu_id,
-								menu_name = menu.name)
+								menu_name = mnu_dao.get_menu(menu_id).name)
 
 	# Else it's a POST
 	new_name = request.form['name']
