@@ -31,12 +31,17 @@ def new_menu_item(restaurant_id):
 		return render_template('newmenuitem.html', restaurant_id = restaurant_id)
 
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
+	if request.method == 'GET':
+		return render_template('editmenuitem.html',
+								restaurant_id = restaurant_id,
+								menu_id = menu_id)
 
-	return render_template('editmenuitem.html',
-							restaurant_id = restaurant_id,
-							menu_id = menu_id)
+	# Else it's a POST
+	new_name = request.form['name']
+	mnu_dao.set_menu_name(menu_id, new_name)
+	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/')

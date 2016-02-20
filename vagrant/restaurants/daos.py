@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from database_setup import Base, Restaurant, MenuItem
+
+
 
 class RestaurantDAO():
 
@@ -65,8 +66,20 @@ class MenuItemDAO():
         self.session.close()
 
 
+    def get_menu(self, menu_id):
+        return self.session.query(MenuItem).filter_by(id=menu_id).one()
+
+
     def get_menu_by_restaurant(self, rest_id):
         return self.session.query(MenuItem).filter_by(restaurant_id = rest_id)
+
+
+    def set_menu_name(self, menu_id, new_name):
+        menu = self.get_menu(menu_id)
+        if menu:
+            menu.name = new_name
+            self.session.add(menu)
+            self.session.commit()
 
 
     def add_menu_item(self, rest_id, new_name):
