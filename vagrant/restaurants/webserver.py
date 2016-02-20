@@ -3,7 +3,7 @@ import sys
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
-from daos import RestaurantsDAO
+from daos import RestaurantDAO
 
 
 class WebServerHandler(BaseHTTPRequestHandler):
@@ -36,7 +36,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
             output = self._HTML_START
             output = "<p><a href='/restaurants/new'>Make a new restaurant</a></p>"
 
-            dao = RestaurantsDAO()
+            dao = RestaurantDAO()
             restaurants = dao.get_all_restaurants()
             dao.close()
             for restaurant in restaurants:
@@ -71,7 +71,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
         if self.path.endswith("/edit"):
             rest_id = self.path.split("/")[2]
 
-            dao = RestaurantsDAO()
+            dao = RestaurantDAO()
             restaurant = dao.get_restaurant(rest_id)
             dao.close()
 
@@ -93,7 +93,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
         if self.path.endswith("/delete"):
             rest_id = self.path.split("/")[2]
 
-            dao = RestaurantsDAO()
+            dao = RestaurantDAO()
             restaurant = dao.get_restaurant(rest_id)
             dao.close()
 
@@ -130,7 +130,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
                     new_name = fields.get('name')[0]
 
                 # Insert into DB
-                dao = RestaurantsDAO()
+                dao = RestaurantDAO()
                 dao.add_restaurant(new_name)
                 dao.close()
 
@@ -146,7 +146,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
                     rest_id = self.path.split("/")[2]
 
                 # Update DB
-                dao = RestaurantsDAO()
+                dao = RestaurantDAO()
                 dao.set_restaurant_name(rest_id, new_name)
                 dao.close()
 
@@ -157,7 +157,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 rest_id = self.path.split("/")[2]
 
                 # Update DB
-                dao = RestaurantsDAO()
+                dao = RestaurantDAO()
                 dao.delete_restaurant(rest_id)
                 dao.close()
 

@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Base, Restaurant, MenuItem
 
-class RestaurantsDAO():
+class RestaurantDAO():
 
     def __init__(self):
         engine = create_engine('sqlite:///restaurantmenu.db')
@@ -16,10 +16,10 @@ class RestaurantsDAO():
     def close(self):
         #print "closing connection"
         self.session.close()
-
+        
 
     def get_all_restaurants(self):
-        return self.session.query(Restaurant).all()   
+        return self.session.query(Restaurant).all()
 
 
     def get_restaurant(self, rest_id):
