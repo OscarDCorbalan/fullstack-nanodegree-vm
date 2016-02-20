@@ -3,8 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
 
-
-class RestaurantDAO():
+class GenericDAO():
 
     def __init__(self):
         engine = create_engine('sqlite:///restaurantmenu.db')
@@ -17,6 +16,7 @@ class RestaurantDAO():
         #print "closing connection"
         self.session.close()
 
+class RestaurantDAO(GenericDAO):
 
     def get_restaurant(self, rest_id):
         return self.session.query(Restaurant).filter_by(id=rest_id).one()
@@ -52,7 +52,7 @@ class RestaurantDAO():
 
 
 
-class MenuItemDAO():
+class MenuItemDAO(GenericDAO):
 
     def __init__(self):
         engine = create_engine('sqlite:///restaurantmenu.db')
