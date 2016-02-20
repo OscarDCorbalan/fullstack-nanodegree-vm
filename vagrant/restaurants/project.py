@@ -33,7 +33,10 @@ def new_menu_item(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')
 def edit_menu_item(restaurant_id, menu_id):
-	return "page to edit a menu item. Task 2 complete!"
+
+	return render_template('editmenuitem.html',
+							restaurant_id = restaurant_id,
+							menu_id = menu_id)
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/')
