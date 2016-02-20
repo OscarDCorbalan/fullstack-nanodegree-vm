@@ -1,5 +1,5 @@
-from flask import Flask
-from daos import *
+from flask import Flask, render_template
+from daos import RestaurantDAO, MenuItemDAO
 
 app = Flask(__name__)
 
@@ -13,32 +13,25 @@ def HelloWorld():
 
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
+	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 
-	output = ""
-	for i in items:
-		output += "<p>"
-		output += "%s</br>" %i.name
-		output += "%s</br>" %i.price
-		output += "%s" %i.description
-		output += "</p>"
-
-	return output
+	return render_template('menu.html', restaurant = restaurant, items = items)
 
 
 @app.route('/restaurants/<int:restaurant_id>/new/')
 def new_menu_item(restaurant_id):
-    return "page to create a new menu item. Task 1 complete!"
+	return "page to create a new menu item. Task 1 complete!"
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')
 def edit_menu_item(restaurant_id, menu_id):
-    return "page to edit a menu item. Task 2 complete!"
+	return "page to edit a menu item. Task 2 complete!"
 
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete'/)
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/')
 def delete_menu_item(restaurant_id, menu_id):
-    return "page to delete a menu item. Task 3 complete!"
+	return "page to delete a menu item. Task 3 complete!"
 
 
 if __name__ == '__main__':
