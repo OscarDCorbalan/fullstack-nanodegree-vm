@@ -16,6 +16,8 @@ class GenericDAO():
         #print "closing connection"
         self.session.close()
 
+
+
 class RestaurantDAO(GenericDAO):
 
     def get_restaurant(self, rest_id):
