@@ -1,9 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from daos import RestaurantDAO, MenuItemDAO
 
 app = Flask(__name__)
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
+
+
+# API Endopoint on GET request
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def restaurant_menu_json(restaurant_id):
+	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
+	return jsonify(MenuItems=[i.serialize for i in items])
 
 
 @app.route('/')
