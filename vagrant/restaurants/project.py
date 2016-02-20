@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from daos import RestaurantDAO, MenuItemDAO
 
 app = Flask(__name__)
@@ -19,9 +19,16 @@ def restaurant_menu(restaurant_id):
 	return render_template('menu.html', restaurant = restaurant, items = items)
 
 
-@app.route('/restaurants/<int:restaurant_id>/new/')
+@app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
-	return "page to create a new menu item. Task 1 complete!"
+	if request.method == 'POST':
+		new_name = request.form['name']
+		mnu_dao.add_menu_item(restaurant_id, new_name)
+		return redirect(
+			url_for('restaurant_menu', restaurant_id = restaurant_id))
+
+	else:
+		return render_template('newmenuitem.html', restaurant_id = restaurant_id)
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')

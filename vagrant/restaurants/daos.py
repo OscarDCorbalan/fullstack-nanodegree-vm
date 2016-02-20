@@ -67,3 +67,9 @@ class MenuItemDAO():
 
     def get_menu_by_restaurant(self, rest_id):
         return self.session.query(MenuItem).filter_by(restaurant_id = rest_id)
+
+
+    def add_menu_item(self, rest_id, new_name):
+        new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
+        self.session.add(new_menu)
+        self.session.commit()
