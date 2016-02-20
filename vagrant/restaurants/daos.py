@@ -17,16 +17,16 @@ class RestaurantDAO():
         self.session.close()
 
 
+    def get_restaurant(self, rest_id):
+        return self.session.query(Restaurant).filter_by(id=rest_id).one()
+
+
     def get_first_restaurant(self):
         return self.session.query(Restaurant).first()
 
 
     def get_all_restaurants(self):
         return self.session.query(Restaurant).all()
-
-
-    def get_restaurant(self, rest_id):
-        return self.session.query(Restaurant).filter_by(id=rest_id).one()
 
 
     def set_restaurant_name(self, rest_id, new_name):
