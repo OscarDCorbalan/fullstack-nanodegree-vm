@@ -36,18 +36,26 @@ def show_restaurants():
 def new_restaurant():
 	if request.method == 'GET':
 		return render_template('newrestaurant.html')
-	# Else it's a POST
+
+	# Else: it's a POST
 	new_name = request.form['name']
 	rst_dao.add_restaurant(new_name)
 	flash("Restaurant succesfully added")
-	return redirect(url_for('show_menu'))
+	return redirect(url_for('show_restaurants'))
 
 
 # Form to edit an existing restaurant
-@app.route('/restaurants/<int:restaurant_id>/edit')
+@app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def edit_restaurant(restaurant_id):
-	restaurant = rst_dao.get_restaurant(restaurant_id)
-	return render_template('editrestaurant.html', restaurant = restaurant)
+	if request.method == 'GET':
+		restaurant = rst_dao.get_restaurant(restaurant_id)
+		return render_template('editrestaurant.html', restaurant = restaurant)
+
+	# Else: it's a POST
+	new_name = request.form['name']
+	rst_dao.set_restaurant_name(restaurant_id, new_name)
+	flash("Restaurant name succesfully changed to %s" %new_name)
+	return redirect(url_for('show_restaurants'))
 
 
 # Form to delete a restaurant
