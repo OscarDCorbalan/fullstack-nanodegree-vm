@@ -61,7 +61,7 @@ class MenuItemDAO(GenericDAO):
 
 
     def get_menu_by_restaurant(self, rest_id):
-        return self.session.query(MenuItem).filter_by(restaurant_id = rest_id)
+        return self.session.query(MenuItem).filter_by(restaurant_id = rest_id).all()
 
 
     def set_menu_name(self, menu_id, new_name):
