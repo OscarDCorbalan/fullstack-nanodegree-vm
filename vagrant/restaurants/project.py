@@ -80,8 +80,7 @@ def edit_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
 		return render_template('editmenuitem.html',
 								restaurant_id = restaurant_id,
-								menu_id = menu_id,
-								menu_name = mnu_dao.get_menu(menu_id).name)
+								item = mnu_dao.get_menu(menu_id))
 
 	# Else it's a POST
 	new_name = request.form['name']
