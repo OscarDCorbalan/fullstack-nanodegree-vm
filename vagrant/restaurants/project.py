@@ -71,7 +71,7 @@ def new_menu_item(restaurant_id):
 	flash("New menu item created")
 
 	return redirect(
-		url_for('restaurant_menu', restaurant_id = restaurant_id))
+		url_for('show_menu', restaurant_id = restaurant_id))
 
 
 # Form to edit an existing menu item
@@ -86,7 +86,7 @@ def edit_menu_item(restaurant_id, menu_id):
 	new_name = request.form['name']
 	mnu_dao.set_menu_name(menu_id, new_name)
 	flash("Menu item succesfully edited")
-	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
+	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
 
 # Form to delete an existing menu item
@@ -99,7 +99,7 @@ def delete_menu_item(restaurant_id, menu_id):
 	# Else it's a POST
 	mnu_dao.delete_menu(menu_id)
 	flash("Menu item deleted")
-	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
+	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
 
 if __name__ == '__main__':
