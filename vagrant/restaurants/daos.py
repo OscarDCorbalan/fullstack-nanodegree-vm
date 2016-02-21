@@ -17,6 +17,15 @@ class GenericDAO():
         self.session.close()
 
 
+    def persist(self, obj):
+        self.session.add(obj)
+        self.session.commit()
+
+
+    def discontinue(self, obj):
+        self.session.delete(obj)
+        self.session.commit()
+
 
 class RestaurantDAO(GenericDAO):
 
@@ -36,21 +45,18 @@ class RestaurantDAO(GenericDAO):
         restaurant = self.get_restaurant(rest_id)
         if restaurant:
             restaurant.name = new_name
-            self.session.add(restaurant)
-            self.session.commit()
+            self.persist(restaurant)
 
 
     def add_restaurant(self, new_name):
         new_restaurant = Restaurant(name = new_name)
-        self.session.add(new_restaurant)
-        self.session.commit()
+        self.persist(new_restaurant)
 
 
     def delete_restaurant(self, rest_id):
         restaurant = self.get_restaurant(rest_id)
         if restaurant:
-            self.session.delete(restaurant)
-            self.session.commit()
+            self.discontinue(restaurant)
 
 
 
@@ -68,18 +74,15 @@ class MenuItemDAO(GenericDAO):
         menu = self.get_menu(menu_id)
         if menu:
             menu.name = new_name
-            self.session.add(menu)
-            self.session.commit()
+            self.persist(menu)
 
 
     def add_menu_item(self, rest_id, new_name):
         new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
-        self.session.add(new_menu)
-        self.session.commit()
+        self.persist(new_menu)
 
 
     def delete_menu(self, menu_id):
         menu = self.get_menu(menu_id)
         if menu:
-            self.session.delete(menu)
-            self.session.commit()
+            self.discontinue(menu)
