@@ -40,7 +40,8 @@ def new_restaurant():
 # Form to edit an existing restaurant
 @app.route('/restaurants/<int:restaurant_id>/edit')
 def edit_restaurant(restaurant_id):
-	return "TODO: editing restaurant %s" %restaurant_id
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	return render_template('editrestaurant.html', restaurant = restaurant)
 
 
 # Form to delete a restaurant
