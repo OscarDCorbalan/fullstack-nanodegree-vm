@@ -47,7 +47,8 @@ def edit_restaurant(restaurant_id):
 # Form to delete a restaurant
 @app.route('/restaurants/<int:restaurant_id>/delete')
 def delete_restaurant(restaurant_id):
-	return "TODO: delete restaurant %s" %restaurant_id
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	return render_template('deleterestaurant.html', restaurant = restaurant)
 
 
 # List of the menu items in a restaurant, plus item create/edit/delete links
