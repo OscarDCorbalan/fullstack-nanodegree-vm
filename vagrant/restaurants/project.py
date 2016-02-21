@@ -40,7 +40,7 @@ def new_restaurant():
 	new_name = request.form['name']
 	rst_dao.add_restaurant(new_name)
 	flash("Restaurant succesfully added")
-	return redirect(url_for('show_restaurants'))
+	return redirect(url_for('show_menu'))
 
 
 # Form to edit an existing restaurant
