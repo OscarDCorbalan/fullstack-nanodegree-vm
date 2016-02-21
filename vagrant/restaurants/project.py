@@ -26,8 +26,9 @@ def menu_item_json(restaurant_id, menu_id):
 # Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
 @app.route('/')
 @app.route('/restaurants')
-def restaurant_listing():
-	return "TODO: show all restaurants"
+def show_restaurants():
+	restaurants = rst_dao.get_all_restaurants()
+	return render_template('restaurants.html', restaurants = restaurants)
 
 
 # Form to create a new restaurant
@@ -51,7 +52,7 @@ def delete_restaurant(restaurant_id):
 # List of the menu items in a restaurant, plus item create/edit/delete links
 @app.route('/restaurants/<int:restaurant_id>/')
 @app.route('/restaurants/<int:restaurant_id>/menu')
-def restaurant_menu(restaurant_id):
+def show_menu(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 
