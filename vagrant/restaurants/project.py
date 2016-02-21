@@ -6,26 +6,51 @@ rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
 
 
-# API Endpoint to list a menu on GET request
+# API Endpoints serving JSON
+
 @app.route('/restaurants/<int:restaurant_id>/menu/JSON')
 def restaurant_menu_json(restaurant_id):
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 	return jsonify(MenuItems=[i.serialize for i in items])
 
 
-# API Endpoint to return a menu on GET request
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 def menu_item_json(restaurant_id, menu_id):
 	item = mnu_dao.get_menu(menu_id)
 	return jsonify(MenuItem=item.serialize)
 
 
+
+# Web routes
+
+# Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
 @app.route('/')
-def HelloWorld():
-	return "Hello World!"
+@app.route('/restaurants')
+def restaurant_listing():
+	return "TODO: show all restaurants"
 
 
+# Form to create a new restaurant
+@app.route('/restaurants/new')
+def new_restaurant():
+	return "TODO: form to add a restaurant"
+
+
+# Form to edit an existing restaurant
+@app.route('/restaurants/<int:restaurant_id>/edit')
+def edit_restaurant(restaurant_id):
+	return "TODO: editing restaurant %s" %restaurant_id
+
+
+# Form to delete a restaurant
+@app.route('/restaurants/<int:restaurant_id>/delete')
+def delete_restaurant(restaurant_id):
+	return "TODO: delete restaurant %s" %restaurant_id
+
+
+# List of the menu items in a restaurant, plus item create/edit/delete links
 @app.route('/restaurants/<int:restaurant_id>/')
+@app.route('/restaurants/<int:restaurant_id>/menu')
 def restaurant_menu(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
@@ -33,6 +58,7 @@ def restaurant_menu(restaurant_id):
 	return render_template('menu.html', restaurant = restaurant, items = items)
 
 
+# Form to create a new menu item in the restaurant
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
 	if request.method == 'GET':
@@ -47,6 +73,7 @@ def new_menu_item(restaurant_id):
 		url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
+# Form to edit an existing menu item
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
@@ -62,6 +89,7 @@ def edit_menu_item(restaurant_id, menu_id):
 	return redirect(url_for('restaurant_menu', restaurant_id = restaurant_id))
 
 
+# Form to delete an existing menu item
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
