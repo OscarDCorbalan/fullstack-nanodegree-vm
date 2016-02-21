@@ -32,9 +32,15 @@ def show_restaurants():
 
 
 # Form to create a new restaurant
-@app.route('/restaurants/new')
+@app.route('/restaurants/new', methods=['GET', 'POST'])
 def new_restaurant():
-	return render_template('newrestaurant.html')
+	if request.method == 'GET':
+		return render_template('newrestaurant.html')
+	# Else it's a POST
+	new_name = request.form['name']
+	rst_dao.add_restaurant(new_name)
+	flash("Restaurant succesfully added")
+	return redirect(url_for('show_restaurants'))
 
 
 # Form to edit an existing restaurant
