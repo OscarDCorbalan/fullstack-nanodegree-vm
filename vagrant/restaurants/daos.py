@@ -77,6 +77,20 @@ class MenuItemDAO(GenericDAO):
             self.persist(menu)
 
 
+    def set_menu_description(self, menu_id, new_description):
+        menu = self.get_menu(menu_id)
+        if menu:
+            menu.description = new_description
+            self.persist(menu)
+
+
+    def set_menu_price(self, menu_id, new_price):
+        menu = self.get_menu(menu_id)
+        if menu:
+            menu.price = new_price
+            self.persist(menu)
+
+
     def add_menu_item(self, rest_id, new_name):
         new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
         self.persist(new_menu)

@@ -109,6 +109,15 @@ def edit_menu_item(restaurant_id, menu_id):
 	new_name = request.form['name']
 	if new_name != '':
 		mnu_dao.set_menu_name(menu_id, new_name)
+
+	new_description = request.form['description']
+	if new_description != '':
+		mnu_dao.set_menu_description(menu_id, new_description)
+
+	new_price = request.form['price']
+	if new_price != '':
+		mnu_dao.set_menu_price(menu_id, new_price)
+
 	flash("Menu item succesfully edited")
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
