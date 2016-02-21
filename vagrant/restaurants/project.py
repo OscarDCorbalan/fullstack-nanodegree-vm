@@ -34,7 +34,7 @@ def show_restaurants():
 # Form to create a new restaurant
 @app.route('/restaurants/new')
 def new_restaurant():
-	return "TODO: form to add a restaurant"
+	return render_template('newrestaurant.html')
 
 
 # Form to edit an existing restaurant
