@@ -70,7 +70,7 @@ def delete_restaurant(restaurant_id):
 	rst_dao.delete_restaurant(restaurant_id)
 	flash("Restaurant %s deleted" %restaurant.name)
 	return redirect(url_for('show_restaurants'))
-	
+
 
 # List of the menu items in a restaurant, plus item create/edit/delete links
 @app.route('/restaurants/<int:restaurant_id>/')
@@ -107,7 +107,8 @@ def edit_menu_item(restaurant_id, menu_id):
 
 	# Else it's a POST
 	new_name = request.form['name']
-	mnu_dao.set_menu_name(menu_id, new_name)
+	if new_name != '':
+		mnu_dao.set_menu_name(menu_id, new_name)
 	flash("Menu item succesfully edited")
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
