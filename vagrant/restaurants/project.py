@@ -59,11 +59,18 @@ def edit_restaurant(restaurant_id):
 
 
 # Form to delete a restaurant
-@app.route('/restaurants/<int:restaurant_id>/delete')
+@app.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def delete_restaurant(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
-	return render_template('deleterestaurant.html', restaurant = restaurant)
 
+	if request.method == 'GET':		
+		return render_template('deleterestaurant.html', restaurant = restaurant)
+
+	# Else: it's a POST
+	rst_dao.delete_restaurant(restaurant_id)
+	flash("Restaurant %s deleted" %restaurant.name)
+	return redirect(url_for('show_restaurants'))
+	
 
 # List of the menu items in a restaurant, plus item create/edit/delete links
 @app.route('/restaurants/<int:restaurant_id>/')
