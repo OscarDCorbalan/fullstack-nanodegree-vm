@@ -7,7 +7,7 @@
 <body>
 	<div class = 'pane'>
 		<h1>Restaurants</h1>
-		
+
 		<div class='flash'>
 		{% with messages = get_flashed_messages() %}
 			{% if messages %}
@@ -20,7 +20,7 @@
 		{% endwith %}
 		</div>
 
-		<a href="{{url_for('new_restaurant')}}" > <h3> Create a New Restaurant </h3> </a>
+		<a href="{{url_for('new_restaurant')}}" > <h3>Create a New Restaurant</h3> </a>
 
 		{% for restaurant in restaurants %}
 			<a href = "{{url_for('show_menu', restaurant_id = restaurant.id)}}"> <p>{{restaurant.name}}</p></a>
