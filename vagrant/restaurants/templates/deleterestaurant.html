@@ -4,12 +4,13 @@
 		<title>Delete restaurant {{restaurant.name}}</title>
 	</head>
 	<body>
-		<h1>Delete restaurant {{restaurant.name}}?</h1>
-		<p>
+		<h1>Delete restaurant {{restaurant.name}}?</h1>		
 			<form action="{{ url_for('delete_restaurant',restaurant_id = restaurant.id)}}" method = 'POST'>
-			Are you sure you want to delete it? <input type='submit' value='Delete'>
-			</form>
-		</p>
+				<p>
+					Are you sure you want to delete it?
+					<input type='submit' value='Delete'>
+				</p>
+			</form>		
 		<a href='{{url_for("show_restaurants")}}'>Cancel</a>
 	</body>
 </html>
