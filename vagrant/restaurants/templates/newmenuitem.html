@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-	<title></title>
-</head>
-<body>
-	<h1>New Menu Item</h1>
+	<head>
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+		<title>New Menu Item</title>
+	</head>
+	<body>
+		<h1>New Menu Item</h1>
 
-	<div class='pane'>
-		<form action="{{url_for('new_menu_item', restaurant_id=restaurant_id )}}" method='POST'>
-			<p>Name:</p>
-			<input type='text' size='30' name='name'>
-			<input type='submit' value='Create'>
-		</form>
-	</div>
-</body>
+		<div class='pane'>
+			<p>
+				<form action="{{url_for('new_menu_item', restaurant_id=restaurant_id )}}" method='POST'>
+					Name: <input type='text' size='30' name='name'>
+					<input type='submit' value='Create'>
+				</form>
+			</p>
+		</div>
+	</body>
 </html>
