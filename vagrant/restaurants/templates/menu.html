@@ -22,7 +22,7 @@
 	{% endwith %}
 	</div>
 
-	<a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create menu item</a>
+	<a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
 
 	{% if items == [] %}
 		<p>
@@ -47,5 +47,6 @@
 		</div>
 	{% endfor %}
 </div>
+<p><a href ="{{url_for('show_restaurants')}}">Go back</a></p>
 </body>
 </html>
