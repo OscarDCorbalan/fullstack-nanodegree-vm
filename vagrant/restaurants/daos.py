@@ -91,6 +91,13 @@ class MenuItemDAO(GenericDAO):
             self.persist(menu)
 
 
+    def set_menu_course(self, menu_id, new_course):
+        menu = self.get_menu(menu_id)
+        if menu:
+            menu.course = new_course
+            self.persist(menu)
+
+
     def add_menu_item(self, rest_id, new_name):
         new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
         self.persist(new_menu)
