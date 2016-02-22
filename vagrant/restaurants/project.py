@@ -38,7 +38,7 @@ def new_restaurant():
 		return render_template('newrestaurant.html')
 
 	# Else: it's a POST
-	new_name = request.form['name']
+	new_name = request.form['name'].strip()
 	rst_dao.add_restaurant(new_name)
 	flash("Restaurant succesfully added")
 	return redirect(url_for('show_restaurants'))
@@ -52,7 +52,7 @@ def edit_restaurant(restaurant_id):
 		return render_template('editrestaurant.html', restaurant = restaurant)
 
 	# Else: it's a POST
-	new_name = request.form['name']
+	new_name = request.form['name'].strip()
 	rst_dao.set_restaurant_name(restaurant_id, new_name)
 	flash("Restaurant name succesfully changed to %s" %new_name)
 	return redirect(url_for('show_restaurants'))
@@ -89,7 +89,7 @@ def new_menu_item(restaurant_id):
 		return render_template('newmenuitem.html', restaurant_id = restaurant_id)
 	
 	# Else it's a POST
-	new_name = request.form['name']
+	new_name = request.form['name'].strip()
 	mnu_dao.add_menu_item(restaurant_id, new_name)
 	flash("New menu item created")
 
@@ -106,15 +106,15 @@ def edit_menu_item(restaurant_id, menu_id):
 								item = mnu_dao.get_menu(menu_id))
 
 	# Else it's a POST
-	new_name = request.form['name']
+	new_name = request.form['name'].strip()
 	if new_name != '':
 		mnu_dao.set_menu_name(menu_id, new_name)
 
-	new_description = request.form['description']
+	new_description = request.form['description'].strip()
 	if new_description != '':
 		mnu_dao.set_menu_description(menu_id, new_description)
 
-	new_price = request.form['price']
+	new_price = request.form['price'].strip()
 	if new_price != '':
 		mnu_dao.set_menu_price(menu_id, new_price)
 
