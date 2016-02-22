@@ -8,6 +8,12 @@ mnu_dao = MenuItemDAO()
 
 # API Endpoints serving JSON
 
+@app.route('/restaurants/JSON')
+def restaurants_json():
+	restaurants = rst_dao.get_all_restaurants()
+	return jsonify(Restaurants=[r.serialize for r in restaurants])
+
+
 @app.route('/restaurants/<int:restaurant_id>/menu/JSON')
 def restaurant_menu_json(restaurant_id):
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
