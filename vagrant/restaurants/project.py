@@ -143,7 +143,8 @@ def edit_menu_item(restaurant_id, menu_id):
 def delete_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
 		menu = mnu_dao.get_menu(menu_id)
-		return render_template('deletemenuitem.html', menu = menu)
+		rst_name = rst_dao.get_restaurant(menu_id).name
+		return render_template('deletemenuitem.html', menu = menu, restaurant_name = rst_name)
 
 	# Else it's a POST
 	mnu_dao.delete_menu(menu_id)
