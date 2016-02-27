@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-		<title>New Menu Item</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}">
+		<script src="http://code.jquery.com/jquery-2.2.1.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	</head>
-	<body>
-		<h1>New Menu Item</h1>
 
-		<div class='pane'>
-			<form action="{{url_for('new_menu_item', restaurant_id=restaurant_id )}}" method='POST'>
-				<p>
-					Name: <input type='text' size='30' name='name'>
-					<input type='submit' value='Create'>
-				</p>
-			</form>			
+	<body>
+		<nav role="navigation" class="navbar navbar-inverse">
+			<div class="container">
+			    <!-- Brand and toggle get grouped for better mobile display -->
+			    <div class="navbar-header">
+			        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+			            <span class="sr-only">Toggle navigation</span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			        </button>
+			        <span class="navbar-brand">Udacity FSWD: Restaurants</span>
+			    </div>
+			    <!-- Collection of nav links, forms, and other content for toggling -->
+			    <div id="navbarCollapse" class="collapse navbar-collapse">
+			        <ul class="nav navbar-nav">
+			            <li><a href="/">Home</a></li>
+			            <li><a href="{{url_for('show_menu', restaurant_id=restaurant_id)}}">{{restaurant_name}}</a></li>
+			        </ul>
+			        <ul class="nav navbar-nav navbar-right">
+			            <li><a href="#">Login</a></li>
+			        </ul>
+			    </div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<h1>New Menu Item</h1>
+			<form action="{{ url_for('new_menu_item', restaurant_id=restaurant_id)}}" method="POST">
+				<div class="form-group">
+					<label class="sr-only" for="newMenuItem-inputName">Name</label>
+					<div class="input-group col-lg-3 col-md-4 col-sm-6 col-xs-8">
+						<div class="input-group-addon">Name</div>
+						<input type="text" class="form-control" placeholder="Menu Item" name="name" id="newMenuItem-inputName">
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Create</button>
+				<a href="{{url_for('show_menu', restaurant_id=restaurant_id)}}"  class="btn btn-default">Cancel</a>
+
+			</form>
 		</div>
+
 	</body>
+
 </html>

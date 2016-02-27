@@ -92,7 +92,10 @@ def show_menu(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
 	if request.method == 'GET':
-		return render_template('newmenuitem.html', restaurant_id = restaurant_id)
+		restaurant_name = rst_dao.get_restaurant(restaurant_id).name
+		return render_template('newmenuitem.html', 
+			restaurant_id = restaurant_id, 
+			restaurant_name=restaurant_name)
 	
 	# Else it's a POST
 	new_name = request.form['name'].strip()
