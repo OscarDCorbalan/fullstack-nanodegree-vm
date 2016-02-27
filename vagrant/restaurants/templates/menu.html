@@ -6,6 +6,7 @@
 		<script src="http://code.jquery.com/jquery-2.2.1.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 		<script src="{{ url_for('static', filename='app.js') }}"></script>
+		<title>{{ restaurant.name }}</title>
 	</head>
 	<body>
 		<nav role="navigation" class="navbar navbar-inverse">
@@ -24,6 +25,7 @@
 			    <div id="navbarCollapse" class="collapse navbar-collapse">
 			        <ul class="nav navbar-nav">
 			            <li><a href="/">Home</a></li>
+			            <li class="active"><a href="{{ url_for('show_menu', restaurant_id=restaurant.id) }}">{{ restaurant.name }}</a></li>
 			        </ul>
 			        <ul class="nav navbar-nav navbar-right">
 			            <li><a href="#">Login</a></li>
