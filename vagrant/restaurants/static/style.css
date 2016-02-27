@@ -1,6 +1,7 @@
 body{ background-color: #F7F7F7; }
 
 .text-grayed{ color: #999; }
+.marginBottom-0{ margin-bottom: 0; }
 .marginBottom-5px{ margin-bottom: 5px; }
 .marginBottom-10px{ margin-bottom: 10px; }
 
@@ -26,6 +27,7 @@ body{ background-color: #F7F7F7; }
 .thumbnail:hover .text-grayed{
     color: #666;
 }
+
 
 .thumbnail h3{ margin-top: 0; }
 
