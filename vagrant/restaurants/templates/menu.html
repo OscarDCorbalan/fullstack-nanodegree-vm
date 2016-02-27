@@ -64,7 +64,9 @@
 							<div class="caption">
 								<h3>{{i.name}}</h3>
 								<p class="text-grayed">{{i.description}}</p>
-								<p class="item-price">{{i.price}}</p>
+								<div class="item-price">
+									<span>{{i.price}}</span>
+								</div>
 								<p>
 									<a class="btn btn-xs btn-primary" href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Edit</a>
 									<a class="btn btn-xs btn-warning"href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Delete</a>
