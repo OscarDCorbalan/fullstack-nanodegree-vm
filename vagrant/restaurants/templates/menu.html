@@ -1,53 +1,86 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<link rel=stylesheet href="{{ url_for('static', filename='foundation-flex.css') }}">
-	<link rel=stylesheet href="{{ url_for('static', filename='app.css') }}">
-	<title>Restaurant Menu</title>
-</head>
-<body>
-	<div class='pane'>
-		<div class='header'>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}">
+		<script src="http://code.jquery.com/jquery-2.2.1.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename='app.js') }}"></script>
+	</head>
+	<body>
+		<nav role="navigation" class="navbar navbar-inverse">
+			<div class="container">
+			    <!-- Brand and toggle get grouped for better mobile display -->
+			    <div class="navbar-header">
+			        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+			            <span class="sr-only">Toggle navigation</span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			        </button>
+			        <span class="navbar-brand">Udacity FSWD: Restaurants</span>
+			    </div>
+			    <!-- Collection of nav links, forms, and other content for toggling -->
+			    <div id="navbarCollapse" class="collapse navbar-collapse">
+			        <ul class="nav navbar-nav">
+			            <li class="active"><a href="#">Home</a></li>
+			        </ul>
+			        <ul class="nav navbar-nav navbar-right">
+			            <li><a href="#">Login</a></li>
+			        </ul>
+			    </div>
+		    </div>
+		</nav>
+
+		<div class="container">
+			<div class='flash'>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<ul>
+				{% for message in messages %}
+				  <li><strong>{{message}}</strong></li>
+				  {% endfor %}
+				</ul>
+				{% endif %}
+			{% endwith %}
+			</div>
 			<h1>{{ restaurant.name }}</h1>
-		</div>
 
-	<div class='flash'>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<ul>
-		{% for message in messages %}
-		  <li><strong>{{message}}</strong></li>
-		  {% endfor %}
-		</ul>
-		{% endif %}
-	{% endwith %}
-	</div>
 
-	<a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
 
-	{% if items == [] %}
-		<p>
-			There are no menu items currently
-		</p>
-	{% endif %}
-
-	{% for i in items %}
-		<div class='nameAndPrice'>
-			<p class='name'>{{i.name}}</p>
-			<p class='price'>
-				{{i.price}}
+		{% if items == [] %}
+			<p>
+				There are no menu items currently
 			</p>
-		</div>		
+		{% endif %}
+			<div class="row">
+				{% for i in items %}
+					<div class="col-sm-12 col-sm-6 col-md-4 col-lg-3">
+						<div class="thumbnail">
+							<img alt="..."
+								 style="height: 200px; width: 100%; display: block;"
+								src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTUzMjI2NjY0NjggdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTMyMjY2NjQ2OCI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44NTkzNzUiIHk9IjEwNS4xIj4yNDJ4MjAwPC90ZXh0PjwvZz48L2c+PC9zdmc+"
+							>
+							<div class="caption">
+								<h3>{{i.name}}</h3>
+								<p class="text-grayed">{{i.description}}</p>
+								<p class="item-price">{{i.price}}</p>
+								<p>
+									<a class="btn btn-xs btn-primary" href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Edit</a>
+									<a class="btn btn-xs btn-warning"href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Delete</a>
+								</p>
+
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<p>
+				<a class="btn btn-sm btn-primary" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
+				<a class="btn btn-sm btn-default" href="{{url_for('show_restaurants')}}">Go back</a>
+			</p>
+		</div>
+
 		
-		<div class='description'>
-			<p>{{i.description}}</p>
-		</div>
-		<div class='editdeletepane'>
-			<a href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Edit</a>
-			<a href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=i.id) }}">Delete</a>
-		</div>
-	{% endfor %}
-</div>
-<p><a href ="{{url_for('show_restaurants')}}">Go back</a></p>
-</body>
+	</body>
 </html>
