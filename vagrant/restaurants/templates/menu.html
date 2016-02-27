@@ -23,7 +23,7 @@
 			    <!-- Collection of nav links, forms, and other content for toggling -->
 			    <div id="navbarCollapse" class="collapse navbar-collapse">
 			        <ul class="nav navbar-nav">
-			            <li class="active"><a href="#">Home</a></li>
+			            <li><a href="/">Home</a></li>
 			        </ul>
 			        <ul class="nav navbar-nav navbar-right">
 			            <li><a href="#">Login</a></li>
@@ -47,12 +47,16 @@
 			<h1>{{ restaurant.name }}</h1>
 
 
+			<p>
+				<a class="btn btn-sm btn-primary" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
+				<a class="btn btn-sm btn-default" href="{{url_for('show_restaurants')}}">Go back</a>
+			</p>
 
 		{% if items == [] %}
 			<p>
 				There are no menu items currently
 			</p>
-		{% endif %}
+		{% else %}
 			<div class="row">
 				{% for i in items %}
 					<div class="col-sm-12 col-sm-6 col-md-4 col-lg-3">
@@ -77,10 +81,7 @@
 					</div>
 				{% endfor %}
 			</div>
-			<p>
-				<a class="btn btn-sm btn-primary" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
-				<a class="btn btn-sm btn-default" href="{{url_for('show_restaurants')}}">Go back</a>
-			</p>
+		{% endif %}
 		</div>
 
 		
