@@ -120,22 +120,22 @@ def edit_menu_item(restaurant_id, menu_id):
 	new_name = request.form['name'].strip()
 	if new_name != '':
 		mnu_dao.set_menu_name(menu_id, new_name)
-		flash("Menu item name succesfully changed to %s", "success") %new_name
+		flash("Menu item name succesfully changed to %s" %new_name, "success") 
 
 	new_description = request.form['description'].strip()
 	if new_description != '':
 		mnu_dao.set_menu_description(menu_id, new_description)
-		flash("Menu item description succesfully changed to %s", "success") %new_description
+		flash("Menu item description succesfully changed to %s" %new_description, "success")
 
 	new_price = request.form['price'].strip()
 	if new_price != '':
 		mnu_dao.set_menu_price(menu_id, new_price)
-		flash("Menu item price succesfully changed to %s", "success") %new_price
+		flash("Menu item price succesfully changed to %s" %new_price, "success")
 
 	new_course = request.form['course']
 	if new_course:
 		mnu_dao.set_menu_course(menu_id, new_course)
-		flash("Menu item course succesfully changed to %s", "success") %new_course
+		flash("Menu item course succesfully changed to %s" %new_course, "success")
 
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
