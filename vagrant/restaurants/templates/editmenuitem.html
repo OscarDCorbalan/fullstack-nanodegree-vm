@@ -16,27 +16,24 @@
 				<div class="form-group">
 					<div class="input-group col-lg-3 col-md-4 col-sm-6 col-xs-8">
 						<div class="input-group-addon">Name</div>
-						<input required type="text" class="form-control" name="name"
-							{%if item.name != None%} value="{{item.name}}"
-							{%else%} placeholder="No name inserted" {% endif %}>
+						<input required type="text" class="form-control" name="name" placeholder="No name inserted"
+							{%if item.name != None%} value="{{item.name}}" {% endif %}>
 					</div>
 				</div>
 			
 				<div class="form-group">
 					<div class="input-group col-lg-8 col-md-8 col-sm-12 col-xs-12">
 						<div class="input-group-addon">Description</div>
-						<input required type="text" class="form-control" name="description"
-							{%if item.description != None%} value="{{item.description}}"
-							{%else%} placeholder="Tasty dish accompanied by tasty tasties, all bathed in our secret tasty sauce." {% endif %}>
+						<input required type="text" class="form-control" name="description" placeholder="Tasty dish accompanied by tasty tasties, all bathed in our secret tasty sauce."
+							{%if item.description != None%} value="{{item.description}}" {% endif %}>							
 					</div>
 				</div>
 			
 				<div class="form-group">
 					<div class="input-group col-lg-2 col-md-2 col-sm-3 col-xs-4">
 						<div class="input-group-addon">Price</div>
-						<input required type="text" class="form-control" name="price"
-							{%if item.price != None%} value="{{item.price}}"
-							{%else%} placeholder="$X.XX" {% endif %}>
+						<input required type="text" class="form-control" name="price" placeholder="$X.XX"
+							{%if item.price != None%} value="{{item.price}}" {% endif %}>
 					</div>
 				</div>
 			
@@ -45,12 +42,12 @@
 					<div class="input-group col-lg-3 col-md-3 col-sm-4 col-xs-6">
 						<div class="input-group-addon">Course</div>
 						<select class="form-control" name="course" required>
+							<!-- When no course is still selected, show a selected but disabled box as a feedback -->
+							{% if item.course == None %}<option selected disabled></option>{% endif %}
 							<option {% if item.course == "Appetizer" %}selected{% endif %} value="Appetizer">Appetizer</option>
 							<option {% if item.course == "Entree" %}selected{% endif %} value="Entree">Entree</option>
 							<option {% if item.course == "Dessert" %}selected{% endif %} value="Dessert">Dessert</option>
 							<option {% if item.course == "Beverage" %}selected{% endif %} value="Beverage">Beverage</option>
-							<!-- When no course is still selected, show a selected but disabled box as a feedback -->
-							{% if item.course == None %}<option selected disabled class="text-grayed">-</option>{% endif %}
 						</select>
 					</div>
 				</div>
