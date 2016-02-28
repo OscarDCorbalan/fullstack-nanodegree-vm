@@ -35,19 +35,16 @@
 		</nav>
 
 		<div class="container">
-			<div class='flash'>
 			{% with messages = get_flashed_messages() %}
 				{% if messages %}
-				<ul>
+				<ul class="list-group">
 				{% for message in messages %}
-				  <li><strong>{{message}}</strong></li>
+				  <li class="list-group-item list-group-item-info">{{message}}</li>
 				  {% endfor %}
 				</ul>
 				{% endif %}
 			{% endwith %}
-			</div>
 			<h1>{{ restaurant.name }}</h1>
-
 
 			<p>
 				<a class="btn btn-sm btn-primary" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id) }}">Create new menu item</a>
