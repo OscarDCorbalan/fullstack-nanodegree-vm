@@ -70,6 +70,26 @@ class MenuItemDAO(GenericDAO):
         return self.session.query(MenuItem).filter_by(restaurant_id = rest_id).all()
 
 
+    def get_menu_name(self, menu_id):
+        menu = self.get_menu(menu_id)
+        return menu.name
+
+
+    def get_menu_description(self, menu_id):
+        menu = self.get_menu(menu_id)
+        return menu.description
+
+
+    def get_menu_price(self, menu_id):
+        menu = self.get_menu(menu_id)
+        return menu.price
+
+
+    def get_menu_course(self, menu_id):
+        menu = self.get_menu(menu_id)
+        return menu.course
+
+
     def set_menu_name(self, menu_id, new_name):
         menu = self.get_menu(menu_id)
         if menu:
