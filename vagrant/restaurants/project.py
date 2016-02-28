@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from daos import RestaurantDAO, MenuItemDAO
+from werkzeug.contrib.atom import AtomFeed
+from datetime import datetime
 
 app = Flask(__name__)
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
 
 
-# API Endpoints serving JSON
+# JSON Endpoints 
 
 @app.route('/restaurants/JSON')
 def restaurants_json():
@@ -26,6 +28,55 @@ def menu_item_json(restaurant_id, menu_id):
 	return jsonify(MenuItem=item.serialize)
 
 
+# Atom Endpoints
+
+@app.route('/restaurants/ATOM')
+def restaurants_atom():
+	feed = AtomFeed('Restaurants', feed_url=request.url, url=url_for('show_restaurants'))
+
+	restaurants = rst_dao.get_all_restaurants()
+	for r in restaurants:
+		feed.add(r.name, unicode(r.name),
+                 content_type='html',
+                 id=r.id,
+                 url=url_for('show_menu', restaurant_id=r.id),
+                 updated=datetime.today())
+	return feed.get_response()
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/ATOM')
+def restaurant_menu_atom(restaurant_id):
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	feed = AtomFeed('%s menu' %restaurant.name,
+		feed_url=request.url,
+		url=url_for('show_menu', restaurant_id = restaurant_id))
+
+	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
+	for i in items:
+		feed.add(i.name, unicode(i.description),
+                 content_type='html',
+                 id=i.id,
+                 url=url_for('show_menu', restaurant_id=restaurant_id),
+                 updated=datetime.today())
+	return feed.get_response()
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/ATOM')
+def menu_item_atom(restaurant_id, menu_id):
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	item = mnu_dao.get_menu(menu_id)
+
+	feed = AtomFeed(item.name,
+		feed_url=request.url,
+		url=url_for('show_menu', restaurant_id = restaurant_id))
+
+	feed.add(item.name, unicode(item.description),
+             content_type='html',
+             id=item.id,
+             url=url_for('show_menu', restaurant_id=restaurant_id),
+             updated=datetime.today())
+	return feed.get_response()
+
 
 # Web routes
 
@@ -38,7 +89,8 @@ def show_restaurants():
 
 
 # Form to create a new restaurant
-@app.route('/restaurants/new', methods=['GET', 'POST'])
+@app.route('/restaurants/new',
+	methods=['GET', 'POST'])
 def new_restaurant():
 	if request.method == 'GET':
 		return render_template('newrestaurant.html')
@@ -51,7 +103,8 @@ def new_restaurant():
 
 
 # Form to edit an existing restaurant
-@app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/edit',
+	methods=['GET', 'POST'])
 def edit_restaurant(restaurant_id):
 	if request.method == 'GET':
 		restaurant = rst_dao.get_restaurant(restaurant_id)
@@ -65,7 +118,8 @@ def edit_restaurant(restaurant_id):
 
 
 # Form to delete a restaurant
-@app.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/delete',
+	methods=['GET', 'POST'])
 def delete_restaurant(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 
@@ -89,7 +143,8 @@ def show_menu(restaurant_id):
 
 
 # Form to create a new menu item in the restaurant
-@app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/new/',
+	methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
 	if request.method == 'GET':
 		restaurant_name = rst_dao.get_restaurant(restaurant_id).name
@@ -107,7 +162,8 @@ def new_menu_item(restaurant_id):
 
 
 # Form to edit an existing menu item
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/',
+	methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
 		restaurant = rst_dao.get_restaurant(restaurant_id)
@@ -121,7 +177,7 @@ def edit_menu_item(restaurant_id, menu_id):
 	cur_name = mnu_dao.get_menu_name(menu_id)
 	if new_name != '' and new_name != cur_name:
 		mnu_dao.set_menu_name(menu_id, new_name)
-		flash("Menu item name succesfully changed to %s" %new_name, "success") 
+		flash("Menu item name succesfully changed to %s" %new_name, "success")
 
 	new_description = request.form['description'].strip()
 	cur_description = mnu_dao.get_menu_description(menu_id)
@@ -145,7 +201,8 @@ def edit_menu_item(restaurant_id, menu_id):
 
 
 # Form to delete an existing menu item
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/',
+	methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
 		menu = mnu_dao.get_menu(menu_id)
