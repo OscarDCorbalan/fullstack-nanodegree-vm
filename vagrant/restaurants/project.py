@@ -1,9 +1,24 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from daos import RestaurantDAO, MenuItemDAO
+from werkzeug import SharedDataMiddleware, secure_filename
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
+
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_FILES = set(['png', 'jpg', 'jpeg', 'gif'])
+
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 # 1 Megabyte
+app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
+app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+    '/uploads':  app.config['UPLOAD_FOLDER']
+})
+
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
 
@@ -197,7 +212,21 @@ def edit_menu_item(restaurant_id, menu_id):
 		mnu_dao.set_menu_course(menu_id, new_course)
 		flash("Menu item course succesfully changed to %s" %new_course, "success")
 
+	new_image = request.files['image']
+	if new_image and allowed_file(new_image.filename):
+		# Prepend the menu_id to the name to make it unique
+		filename = `menu_id` + secure_filename(new_image.filename)
+		new_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		mnu_dao.set_menu_image(menu_id, filename)
+		flash("Menu item image succesfully changed", "success")
+		#return redirect(url_for('uploaded_file', filename=filename))
+
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
+
+
+def allowed_file(filename):
+	return '.' in filename and \
+		filename.rsplit('.', 1)[1] in ALLOWED_FILES
 
 
 # Form to delete an existing menu item

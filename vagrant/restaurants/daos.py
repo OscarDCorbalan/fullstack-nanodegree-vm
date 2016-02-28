@@ -90,6 +90,11 @@ class MenuItemDAO(GenericDAO):
         return menu.course
 
 
+    def get_menu_image(self, menu_id):
+        menu = self.get_menu(menu_id)
+        return menu.filename
+
+
     def set_menu_name(self, menu_id, new_name):
         menu = self.get_menu(menu_id)
         if menu:
@@ -115,6 +120,13 @@ class MenuItemDAO(GenericDAO):
         menu = self.get_menu(menu_id)
         if menu:
             menu.course = new_course
+            self.persist(menu)
+
+
+    def set_menu_image(self, menu_id, filename):
+        menu = self.get_menu(menu_id)
+        if menu:
+            menu.image = filename
             self.persist(menu)
 
 
