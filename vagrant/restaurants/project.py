@@ -33,8 +33,6 @@ def menu_item_json(restaurant_id, menu_id):
 @app.route('/')
 @app.route('/restaurants')
 def show_restaurants():
-	flash("Restaurant succesfully added", "success")
-	flash("Restaurant succesfully added", "danger")
 	restaurants = rst_dao.get_all_restaurants()
 	return render_template('restaurants.html', restaurants = restaurants)
 
