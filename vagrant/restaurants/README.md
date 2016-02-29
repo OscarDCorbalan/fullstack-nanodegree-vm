@@ -4,7 +4,7 @@ _This project is part of Udacity's Full Stack Developer Nanodegree._
 
 This project consists in implementing **Python** modules that use **SQLAlchemy** with **SQLite** databases.
 
-![screenshot](/screenshot.jpg?raw=true "Project as of 29 February 2016")
+![screenshot](/vagrant/restaurants/screenshot.jpg?raw=true "Project as of 29 February 2016")
 
 **TODO**
 
