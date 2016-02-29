@@ -4,17 +4,14 @@ _This project is part of Udacity's Full Stack Developer Nanodegree._
 
 This project consists in implementing **Python** modules that use **SQLAlchemy** with **SQLite** databases.
 
-[screenshot](screenshot.png?title=Project as of 29 February 2016)
+![screenshot](/screenshot.png?raw=true "Project as of 29 February 2016")
 
 **TODO**
 
-## Problem set 1
+## Note: problem-set-1 folder
 
-### Resources
+You can safely ignore it when running the project, as it's just a problem set to practice, where students need to rely on the SQLAlchemy documentation and Python documentation heavily, with freedom to use any other outside resources like StackOverflow or Flask blogs.
 
-In order to complete the exercises in this problem set, students need to rely on the SQLAlchemy documentation and Python documentation heavily, with freedom to use any other outside resources like StackOverflow or Flask blogs.
-
-**TODO**
 
 
 # How to run the project
