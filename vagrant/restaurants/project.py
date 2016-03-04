@@ -5,11 +5,16 @@ from werkzeug import SharedDataMiddleware, secure_filename
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
-
+from flask import session as login_session, make_response
+import random, string
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+import httplib2
+import json
+import requests
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_FILES = set(['png', 'jpg', 'jpeg', 'gif'])
-
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -94,6 +99,87 @@ def menu_item_atom(restaurant_id, menu_id):
 
 
 # Web routes
+
+# Login route
+@app.route('/login')
+def showLogin():
+	state = ''.join(random.choice(string.ascii_uppercase + string.digits) 
+		for x in xrange(32))
+	login_session['state'] = state
+	return render_template('login.html', STATE=state)
+
+
+def gconnectError(http_code, text):
+	response = make_response(json.dumps(text), http_code)
+	response.headers['Content-type'] = 'application/json'
+	return response
+
+
+# Login route
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+	if request.args.get('state') != login_session['state']:
+		return gconnectError(401, 'Invalid state paremeter.')
+	code = request.data
+	try:
+		ouath_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+		ouath_flow.redirect_uri = 'postmessage'
+		credentials = ouath_flow.step2_exchange(code)
+	except FlowExchangeError:
+		return gconnectError(401, 'Failed to upgrade the authorization code.')
+
+	access_token = credentials.access_token
+	url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+		% access_token)
+	h = httplib2.Http()
+	result = json.loads(h.request(url, 'GET')[1])
+
+	# If there is an error, abort
+	if result.get('error') is not None:
+		return gconnectError(500, result.get('error'))
+
+	# Verify that token is used for the indended user
+	gplus_id = credentials.id_token['sub']
+	if result['user_id'] != gplus_id:
+		return gconnectError(401, 'Token and given user IDs don\'t match.')
+
+	# Verify that token is valid for this app
+	if result['issued_to'] != CLIENT_ID:
+		return gconnectError(401, 'Token and app client IDs don\'t match.')
+
+	# Check if user is already logged in
+	stored_credentials = login_session.get('credentials')
+	stored_gplus_id = login_session.get('gplus_id')
+	if stored_credentials is not None\
+		and gplus_id == stored_gplus_id:
+		response = make_response(json.dumps('Current user already connected'), 200)
+		response.headers['Content-type'] = 'application/json'
+
+	# Store access token in the session for later use
+	login_session['credentials'] = credentials.to_json()
+	login_session['gplus_id'] = gplus_id
+
+	# Get user info
+	userinfo_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+	params = {'access_token': credentials.access_token, 'alt': 'json'}
+	answer = requests.get(userinfo_url, params=params)
+	data = json.loads(answer.text)
+	print data
+
+	login_session['username'] = data['name']
+	login_session['picture'] = data['picture']
+	login_session['email'] = data['email']
+
+	output = ''
+	output += '<h1>Welcome, '
+	output += login_session['username']
+	output += '!</h1>'
+	output += '<img src="'
+	output += login_session['picture']
+	output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+	flash("you are now logged in as %s" % login_session['username'])
+	print "done!"
+	return output
 
 # Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
 @app.route('/')

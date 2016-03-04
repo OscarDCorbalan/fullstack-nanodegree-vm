@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}">
+	<script src="http://code.jquery.com/jquery-2.2.1.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="{{ url_for('static', filename='app.js') }}"></script>	
+	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+	<title>{{ title }}</title>
+</head>
+	<body>
+	<div id="signinButton">
+		<span class="g-signin"
+			data-scope="openid email"
+			data-clientid="491743515678-954dmav64m5o7m071fn8d74kfn45o3j6.apps.googleusercontent.com"
+			data-redirecturi="postmessage"
+			data-accesstype="offline"
+			data-cookiepolicy="single_host_origin"
+			data-callback="signInCallback"
+			data-approvalprompt="force">
+		</span>
+	</div>
+	<div id="result"></div>
+
+	<script>
+		var signInOutput = reason => $('#result').html(reason);
+
+		var signInCallback = authResult => {
+			if(!authResult['code']) return;
+				
+
+			$('#signinButton').attr('style', 'display: none');
+
+			// Send one-time-use code to the server and if it responds:
+			//  - write a login soccessful mesage
+			//  - then redirect back to the main page
+			$.ajax({
+				type: 'POST',
+				url: '/gconnect?state={{STATE}}',
+				processData: false,
+				contentType: 'application/octet-stream; charset=utf-8',
+				data: authResult['code'],
+				success: onSuccessHandler
+			});
+		};
+
+		var onSuccessHandler = result => {
+			if(result){
+				signInOutput('Login successful!</br>' + result + '</br>Redirecting...');
+				setTimeout(() => {window.location.href = "/restaurants"}, 4000);
+			}
+			else if(authResult['error']){
+				signInOutput('There was an error: ' + authResult['error']);
+			}
+			else{
+				signInOutput('Failed to make server-side-call. Check config and console.');
+			}
+		};
+	</script>
+	</body>
+
+</html>
