@@ -8,6 +8,10 @@ body{ background-color: #F7F7F7; }
 
 .navbar{border-radius: 0;}
 
+a.list-group-item:hover{
+    background-color: #AFA;
+}
+
 .thumbnail {
     display: block;
     padding: 4px;

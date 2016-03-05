@@ -10,25 +10,12 @@
 		<div class="container">
 			{% include "partials/flash.html" %}
 
-			<div>
-				<p>
-					Check our restaurants:
-					<ul id="restaurant-list">
-						{% for restaurant in restaurants %}
-							<li class="marginBottom-5px">
-								<div class="btn-group btn-group-sm" role="group" aria-label="{{restaurant.name}}">
-									<a href="{{url_for('show_menu', restaurant_id = restaurant.id)}}" class="btn btn-default btn-restaurant-link"  >{{restaurant.name}}</a>
-									<a href="{{url_for('edit_restaurant',restaurant_id = restaurant.id)}}" type="button" class="hidden btn btn-primary" title="Edit">
-				  						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-				  					</a>
-									<a href="{{url_for('delete_restaurant',restaurant_id = restaurant.id)}}"type="button" class="hidden btn btn-warning" title="Delete">
-				  						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-				  					</a>
-								</div>
-							</li>
-						{% endfor %}
-					</ul>
-				</p>
+			<div class="list-group">
+				{% for restaurant in restaurants %}
+					<a href="{{url_for('show_menu', restaurant_id = restaurant.id)}}" class="list-group-item ">
+						{{restaurant.name}}
+					</a>
+				{% endfor %}
 				<p>
 					<a href="{{url_for('new_restaurant')}}" class="btn btn-sm btn-primary">Create a New Restaurant</a>
 				</p>
