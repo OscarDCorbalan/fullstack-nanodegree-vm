@@ -231,7 +231,10 @@ def show_restaurants():
 	restaurants = rst_dao.get_all_restaurants()
 	print login_session
 	if 'username' not in login_session:
-		return render_template('publicrestaurants.html', restaurants = restaurants)
+		return render_template(
+			'publicrestaurants.html',
+			restaurants = restaurants,
+			username = login_session['username'])
 	else:
 		return render_template(
 			'restaurants.html',
@@ -247,7 +250,8 @@ def new_restaurant():
 		return redirect('login')
 
 	if request.method == 'GET':
-		return render_template('newrestaurant.html')
+		return render_template('newrestaurant.html',
+			username = login_session['username'])
 
 	# Else: it's a POST
 	new_name = request.form['name'].strip()
@@ -284,7 +288,10 @@ def delete_restaurant(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 
 	if request.method == 'GET':		
-		return render_template('deleterestaurant.html', restaurant = restaurant)
+		return render_template(
+			'deleterestaurant.html', 
+			restaurant = restaurant, 
+			username = login_session['username'])
 
 	# Else: it's a POST
 	rst_dao.delete_restaurant(restaurant_id)
@@ -299,7 +306,11 @@ def show_menu(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 
-	return render_template('menu.html', restaurant = restaurant, items = items)
+	return render_template(
+		'menu.html', 
+		restaurant = restaurant, 
+		items = items,
+		username = login_session['username'])
 
 
 # Form to create a new menu item in the restaurant
@@ -311,9 +322,11 @@ def new_menu_item(restaurant_id):
 
 	if request.method == 'GET':
 		restaurant_name = rst_dao.get_restaurant(restaurant_id).name
-		return render_template('newmenuitem.html', 
+		return render_template(
+			'newmenuitem.html', 
 			restaurant_id = restaurant_id, 
-			restaurant_name=restaurant_name)
+			restaurant_name=restaurant_name,
+			username = login_session['username'])
 	
 	# Else it's a POST
 	new_name = request.form['name'].strip()
@@ -321,7 +334,8 @@ def new_menu_item(restaurant_id):
 	flash('New menu item created', 'success')
 
 	return redirect(
-		url_for('show_menu', restaurant_id = restaurant_id))
+		url_for('show_menu',
+			restaurant_id = restaurant_id))
 
 
 # Form to edit an existing menu item
@@ -336,7 +350,8 @@ def edit_menu_item(restaurant_id, menu_id):
 		item = mnu_dao.get_menu(menu_id)
 		return render_template('editmenuitem.html',
 								restaurant = restaurant,
-								item = item)
+								item = item,
+								username = login_session['username'])
 
 	# Else it's a POST
 	new_name = request.form['name'].strip()
@@ -390,7 +405,11 @@ def delete_menu_item(restaurant_id, menu_id):
 	if request.method == 'GET':
 		menu = mnu_dao.get_menu(menu_id)
 		rst_name = rst_dao.get_restaurant(restaurant_id).name
-		return render_template('deletemenuitem.html', menu = menu, restaurant_name = rst_name)
+		return render_template(
+			'deletemenuitem.html',
+			menu = menu, 
+			restaurant_name = rst_name,
+			username = login_session['username'])
 
 	# Else it's a POST
 	mnu_dao.delete_menu(menu_id)
