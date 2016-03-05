@@ -98,6 +98,17 @@ def menu_item_atom(restaurant_id, menu_id):
 	return feed.get_response()
 
 
+# Helper functions
+
+def json_response(http_code, text):
+	response = make_response(json.dumps(text), http_code)
+	response.headers['Content-type'] = 'application/json'
+	return response
+
+
+def is_logged():
+	return 'username' in login_session
+
 # Web routes
 
 # Login route
@@ -107,12 +118,6 @@ def showLogin():
 		for x in xrange(32))
 	login_session['state'] = state
 	return render_template('login.html', STATE=state)
-
-
-def json_response(http_code, text):
-	response = make_response(json.dumps(text), http_code)
-	response.headers['Content-type'] = 'application/json'
-	return response
 
 
 # Login with Google Connect
@@ -218,6 +223,9 @@ def show_restaurants():
 @app.route('/restaurants/new',
 	methods=['GET', 'POST'])
 def new_restaurant():
+	if not is_logged():
+		return redirect('login')
+
 	if request.method == 'GET':
 		return render_template('newrestaurant.html')
 
@@ -232,6 +240,9 @@ def new_restaurant():
 @app.route('/restaurants/<int:restaurant_id>/edit',
 	methods=['GET', 'POST'])
 def edit_restaurant(restaurant_id):
+	if not is_logged():
+		return redirect('login')
+
 	if request.method == 'GET':
 		restaurant = rst_dao.get_restaurant(restaurant_id)
 		return render_template('editrestaurant.html', restaurant = restaurant)
@@ -247,6 +258,9 @@ def edit_restaurant(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/delete',
 	methods=['GET', 'POST'])
 def delete_restaurant(restaurant_id):
+	if not is_logged():
+		return redirect('login')
+
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 
 	if request.method == 'GET':		
@@ -272,6 +286,9 @@ def show_menu(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/new/',
 	methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
+	if not is_logged():
+		return redirect('login')
+
 	if request.method == 'GET':
 		restaurant_name = rst_dao.get_restaurant(restaurant_id).name
 		return render_template('newmenuitem.html', 
@@ -291,6 +308,9 @@ def new_menu_item(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/',
 	methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
+	if not is_logged():
+		return redirect('login')
+
 	if request.method == 'GET':
 		restaurant = rst_dao.get_restaurant(restaurant_id)
 		item = mnu_dao.get_menu(menu_id)
@@ -344,6 +364,9 @@ def allowed_file(filename):
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/',
 	methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
+	if not is_logged():
+		return redirect('login')
+		
 	if request.method == 'GET':
 		menu = mnu_dao.get_menu(menu_id)
 		rst_name = rst_dao.get_restaurant(restaurant_id).name
