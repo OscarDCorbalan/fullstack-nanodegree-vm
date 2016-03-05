@@ -110,6 +110,7 @@ def json_response(http_code, text):
 def is_logged():
 	return 'username' in login_session
 
+
 # Web routes
 
 # Login route
@@ -206,6 +207,7 @@ def gdisconnect():
 	# Execute HTTP GET to revoke current token
 	access_token = credentials.access_token
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+	print url
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
 
@@ -218,6 +220,7 @@ def gdisconnect():
 		del login_session['picture']
 		return json_response(200, 'Successfully disconnected')
 	else:
+		print result
 		return json_response(400, 'Failed to revoke user\'s token')
 
 
@@ -226,7 +229,14 @@ def gdisconnect():
 @app.route('/restaurants')
 def show_restaurants():
 	restaurants = rst_dao.get_all_restaurants()
-	return render_template('restaurants.html', restaurants = restaurants)
+	print login_session
+	if 'username' not in login_session:
+		return render_template('publicrestaurants.html', restaurants = restaurants)
+	else:
+		return render_template(
+			'restaurants.html',
+			restaurants = restaurants,
+			username = login_session['username'])
 
 
 # Form to create a new restaurant
