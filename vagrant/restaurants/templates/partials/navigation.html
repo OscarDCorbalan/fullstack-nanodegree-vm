@@ -23,7 +23,12 @@
 	            {% endfor %}
 	        </ul>
 	        <ul class="nav navbar-nav navbar-right">
-	            <li><a href="#">Login</a></li>
+	        	{% if not username %} 
+	        		<li><a href="/login">Login</a></li>
+	            {% else %}
+	            	<li><a>Looged in as {{username}}</a></li>
+	            	<li><a href="/gdisconnect">Disconnect</a></li>
+	            {% endif %}
 	        </ul>
 	    </div>
     </div>
