@@ -1,16 +1,16 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from daos import RestaurantDAO, MenuItemDAO
-from werkzeug import SharedDataMiddleware, secure_filename
-from werkzeug.contrib.atom import AtomFeed
-from datetime import datetime
-
-from flask import session as login_session, make_response
-import random, string
-from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAuth2Credentials
+import random
+import string
 import httplib2
 import json
 import requests
+from datetime import datetime
+from daos import UserDAO, RestaurantDAO, MenuItemDAO
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session as login_session, make_response
+from werkzeug import SharedDataMiddleware, secure_filename
+from werkzeug.contrib.atom import AtomFeed
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAuth2Credentials
+
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_FILES = set(['png', 'jpg', 'jpeg', 'gif'])
