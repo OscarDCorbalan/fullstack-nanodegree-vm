@@ -306,11 +306,17 @@ def show_menu(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 
-	return render_template(
-		'menu.html', 
-		restaurant = restaurant, 
-		items = items,
-		username = login_session['username'])
+	if 'username' not in login_session:
+		return render_template(
+			'publicmenu.html', 
+			restaurant = restaurant, 
+			items = items)
+	else:
+		return render_template(
+			'menu.html', 
+			restaurant = restaurant, 
+			items = items,
+			username = login_session['username'])
 
 
 # Form to create a new menu item in the restaurant
