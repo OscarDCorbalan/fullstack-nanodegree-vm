@@ -8,19 +8,33 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(250), nullable = False)
+    email = Column(String(250), nullable = False)
+    picture = Column(String(250))
+
+
 class Restaurant(Base):
     __tablename__ = 'restaurant'
 
     id = Column(Integer, primary_key = True)
-    name = Column(String(80), nullable = False)
+    name = Column(String(250), nullable = False)
+
+    # Owner User
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
+        """Return object data in serializable format"""
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'owner': user.name
         }
-
 
 
 class MenuItem(Base):
@@ -31,12 +45,19 @@ class MenuItem(Base):
     course = Column(String(250))
     description = Column(String(250))
     price = Column(String(8))
+    image = Column(String(80), default=None)
+
+    # Belonging Restaurant
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
-    image = Column(String(80), default=None)
+
+    # Owner User
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
+        """Return object data in serializable format"""
         return {
             'id': self.id,
             'name': self.name,
