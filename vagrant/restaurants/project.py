@@ -180,8 +180,8 @@ def gconnect():
 	output += '!</h1>'
 	output += '<img src="'
 	output += login_session['picture']
-	output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-	flash("You are now logged in as %s" % login_session['username'], "success")
+	output += '" style="width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;">'
+	flash('You are now logged in as %s' % login_session['username'], 'success')
 	return output
 
 
@@ -232,8 +232,8 @@ def new_restaurant():
 
 	# Else: it's a POST
 	new_name = request.form['name'].strip()
-	rst_dao.add_restaurant(new_name)
-	flash("Restaurant succesfully added", "success")
+	rst_dao.add_restaurant(new_name, login_session['user_id'])
+	flash('Restaurant %s succesfully added' % new_name, 'success')
 	return redirect(url_for('show_restaurants'))
 
 
@@ -251,7 +251,7 @@ def edit_restaurant(restaurant_id):
 	# Else: it's a POST
 	new_name = request.form['name'].strip()
 	rst_dao.set_restaurant_name(restaurant_id, new_name)
-	flash("Restaurant name succesfully changed to %s" %new_name, "success")
+	flash('Restaurant name succesfully changed to %s' %new_name, 'success')
 	return redirect(url_for('show_restaurants'))
 
 
@@ -269,7 +269,7 @@ def delete_restaurant(restaurant_id):
 
 	# Else: it's a POST
 	rst_dao.delete_restaurant(restaurant_id)
-	flash("Restaurant %s deleted" %restaurant.name, "success")
+	flash('Restaurant %s deleted' %restaurant.name, 'success')
 	return redirect(url_for('show_restaurants'))
 
 
@@ -299,7 +299,7 @@ def new_menu_item(restaurant_id):
 	# Else it's a POST
 	new_name = request.form['name'].strip()
 	mnu_dao.add_menu_item(restaurant_id, new_name)
-	flash("New menu item created", "success")
+	flash('New menu item created', 'success')
 
 	return redirect(
 		url_for('show_menu', restaurant_id = restaurant_id))
@@ -324,25 +324,25 @@ def edit_menu_item(restaurant_id, menu_id):
 	cur_name = mnu_dao.get_menu_name(menu_id)
 	if new_name != '' and new_name != cur_name:
 		mnu_dao.set_menu_name(menu_id, new_name)
-		flash("Menu item name succesfully changed to %s" %new_name, "success")
+		flash('Menu item name succesfully changed to %s' %new_name, 'success')
 
 	new_description = request.form['description'].strip()
 	cur_description = mnu_dao.get_menu_description(menu_id)
 	if new_description != '' and new_description != cur_description:
 		mnu_dao.set_menu_description(menu_id, new_description)
-		flash("Menu item description succesfully changed to %s" %new_description, "success")
+		flash('Menu item description succesfully changed to %s' %new_description, 'success')
 
 	new_price = request.form['price'].strip()
 	cur_price = mnu_dao.get_menu_price(menu_id)
 	if new_price != '' and new_price != cur_price:
 		mnu_dao.set_menu_price(menu_id, new_price)
-		flash("Menu item price succesfully changed to %s" %new_price, "success")
+		flash('Menu item price succesfully changed to %s' %new_price, 'success')
 
 	new_course = request.form['course']
 	cur_course = mnu_dao.get_menu_course(menu_id)
 	if new_course != '' and new_course != cur_course:
 		mnu_dao.set_menu_course(menu_id, new_course)
-		flash("Menu item course succesfully changed to %s" %new_course, "success")
+		flash('Menu item course succesfully changed to %s' %new_course, 'success')
 
 	new_image = request.files['image']
 	if new_image and allowed_file(new_image.filename):
@@ -350,7 +350,7 @@ def edit_menu_item(restaurant_id, menu_id):
 		filename = `menu_id` + secure_filename(new_image.filename)
 		new_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 		mnu_dao.set_menu_image(menu_id, filename)
-		flash("Menu item image succesfully changed", "success")
+		flash('Menu item image succesfully changed', 'success')
 		#return redirect(url_for('uploaded_file', filename=filename))
 
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
@@ -375,7 +375,7 @@ def delete_menu_item(restaurant_id, menu_id):
 
 	# Else it's a POST
 	mnu_dao.delete_menu(menu_id)
-	flash("Menu item deleted", "success")
+	flash('Menu item deleted', 'success')
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
 
