@@ -31,12 +31,12 @@ class GenericDAO():
 class UserDAO(GenericDAO):
 
     def get_user(self, user_id):
-        return self.session.query(User).filter_by(user_id=user_id).one()
+        return self.session.query(User).filter_by(user_id = user_id).one()
 
 
     def get_user_id(self, email):
         try:
-            return self.session.query(User).filter_by(email=email).one().id
+            return self.session.query(User).filter_by(email = email).one().id
         except:
             return None
 
@@ -51,7 +51,7 @@ class UserDAO(GenericDAO):
 class RestaurantDAO(GenericDAO):
 
     def get_restaurant(self, rest_id):
-        return self.session.query(Restaurant).filter_by(id=rest_id).one()
+        return self.session.query(Restaurant).filter_by(id = rest_id).one()
 
 
     def get_first_restaurant(self):
@@ -69,8 +69,8 @@ class RestaurantDAO(GenericDAO):
             self.persist(restaurant)
 
 
-    def add_restaurant(self, new_name):
-        new_restaurant = Restaurant(name = new_name)
+    def add_restaurant(self, new_name, user_id):
+        new_restaurant = Restaurant(name = new_name, user_id = user_id)
         self.persist(new_restaurant)
 
 
