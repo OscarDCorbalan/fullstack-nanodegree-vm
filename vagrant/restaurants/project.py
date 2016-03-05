@@ -174,6 +174,15 @@ def gconnect():
 	login_session['picture'] = data['picture']
 	login_session['email'] = data['email']
 
+	# See if user exists, if not make a new one
+	user_id = usr_dao.get_user_id(data['email'])
+	if not user_id:
+		user_id = usr_dao.add_user(
+			data['name'], 
+			data['email'], 
+			data['picture'])
+	login_session['user_id'] = user_id
+
 	output = ''
 	output += '<h1>Welcome, '
 	output += login_session['username']
