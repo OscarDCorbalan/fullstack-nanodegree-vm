@@ -24,6 +24,7 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/uploads':  app.config['UPLOAD_FOLDER']
 })
 
+usr_dao = UserDAO()
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
 
@@ -366,7 +367,7 @@ def allowed_file(filename):
 def delete_menu_item(restaurant_id, menu_id):
 	if not is_logged():
 		return redirect('login')
-		
+
 	if request.method == 'GET':
 		menu = mnu_dao.get_menu(menu_id)
 		rst_name = rst_dao.get_restaurant(restaurant_id).name

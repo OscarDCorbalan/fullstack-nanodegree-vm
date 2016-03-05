@@ -27,6 +27,27 @@ class GenericDAO():
         self.session.commit()
 
 
+
+class UserDAO(GenericDAO):
+
+    def get_user(self, user_id):
+        return self.session.query(User).filter_by(user_id=user_id).one()
+
+
+    def get_user_id(self, email):
+        try:
+            return self.session.query(User).filter_by(email=email).one().id
+        except:
+            return None
+
+
+    def add_user(self, name, email, picture):
+        new_user = User(name = name, email = email, picture = picture)
+        self.persists(new_user)
+        return get_user_id(email)
+
+
+
 class RestaurantDAO(GenericDAO):
 
     def get_restaurant(self, rest_id):
