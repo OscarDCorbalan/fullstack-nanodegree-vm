@@ -151,8 +151,8 @@ class MenuItemDAO(GenericDAO):
             self.persist(menu)
 
 
-    def add_menu_item(self, rest_id, new_name):
-        new_menu = MenuItem(name = new_name, restaurant_id = rest_id)
+    def add_menu_item(self, rest_id, new_name, user_id):
+        new_menu = MenuItem(name = new_name, restaurant_id = rest_id, user_id = user_id)
         self.persist(new_menu)
 
 
