@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, User
 
 
 class GenericDAO():
@@ -43,8 +43,8 @@ class UserDAO(GenericDAO):
 
     def add_user(self, name, email, picture):
         new_user = User(name = name, email = email, picture = picture)
-        self.persists(new_user)
-        return get_user_id(email)
+        self.persist(new_user)
+        return self.get_user_id(email)
 
 
 
