@@ -7,7 +7,7 @@ from datetime import datetime
 
 from flask import session as login_session, make_response
 import random, string
-from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAuth2Credentials
 import httplib2
 import json
 import requests
@@ -109,24 +109,24 @@ def showLogin():
 	return render_template('login.html', STATE=state)
 
 
-def gconnectError(http_code, text):
+def json_response(http_code, text):
 	response = make_response(json.dumps(text), http_code)
 	response.headers['Content-type'] = 'application/json'
 	return response
 
 
-# Login route
+# Login with Google Connect
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	if request.args.get('state') != login_session['state']:
-		return gconnectError(401, 'Invalid state paremeter.')
+		return json_response(401, 'Invalid state paremeter.')
 	code = request.data
 	try:
 		ouath_flow = flow_from_clientsecrets('client_secrets.json', scope='')
 		ouath_flow.redirect_uri = 'postmessage'
 		credentials = ouath_flow.step2_exchange(code)
 	except FlowExchangeError:
-		return gconnectError(401, 'Failed to upgrade the authorization code.')
+		return json_response(401, 'Failed to upgrade the authorization code.')
 
 	access_token = credentials.access_token
 	url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
@@ -136,24 +136,23 @@ def gconnect():
 
 	# If there is an error, abort
 	if result.get('error') is not None:
-		return gconnectError(500, result.get('error'))
+		return json_response(500, result.get('error'))
 
 	# Verify that token is used for the indended user
 	gplus_id = credentials.id_token['sub']
 	if result['user_id'] != gplus_id:
-		return gconnectError(401, 'Token and given user IDs don\'t match.')
+		return json_response(401, 'Token and given user IDs don\'t match.')
 
 	# Verify that token is valid for this app
 	if result['issued_to'] != CLIENT_ID:
-		return gconnectError(401, 'Token and app client IDs don\'t match.')
+		return json_response(401, 'Token and app client IDs don\'t match.')
 
 	# Check if user is already logged in
 	stored_credentials = login_session.get('credentials')
 	stored_gplus_id = login_session.get('gplus_id')
 	if stored_credentials is not None\
-		and gplus_id == stored_gplus_id:
-		response = make_response(json.dumps('Current user already connected'), 200)
-		response.headers['Content-type'] = 'application/json'
+			and gplus_id == stored_gplus_id:
+		response = json_response(200, 'Current user already connected')
 
 	# Store access token in the session for later use
 	login_session['credentials'] = credentials.to_json()
@@ -164,7 +163,6 @@ def gconnect():
 	params = {'access_token': credentials.access_token, 'alt': 'json'}
 	answer = requests.get(userinfo_url, params=params)
 	data = json.loads(answer.text)
-	print data
 
 	login_session['username'] = data['name']
 	login_session['picture'] = data['picture']
@@ -177,9 +175,36 @@ def gconnect():
 	output += '<img src="'
 	output += login_session['picture']
 	output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-	flash("you are now logged in as %s" % login_session['username'])
-	print "done!"
+	flash("You are now logged in as %s" % login_session['username'], "success")
 	return output
+
+
+# Disconnect Google Connect, revoking user's token and ressetting its session
+@app.route('/gdisconnect')
+def gdisconnect():
+	# Abort if not connected
+	credentials = login_session.get('credentials')
+	if credentials is None:
+		return json_response(401, 'Current user not connected')
+
+	credentials = OAuth2Credentials.from_json(credentials)
+	# Execute HTTP GET to revoke current token
+	access_token = credentials.access_token
+	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[0]
+
+	if result['status'] == '200':
+		# Reset session
+		del login_session['credentials']
+		del login_session['gplus_id']
+		del login_session['username']
+		del login_session['email']
+		del login_session['picture']
+		return json_response(200, 'Successfully disconnected')
+	else:
+		return json_response(400, 'Failed to revoke user\'s token')
+
 
 # Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
 @app.route('/')
