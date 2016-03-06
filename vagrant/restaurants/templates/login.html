@@ -31,10 +31,10 @@
 		var signInOutput = reason => $('#result').html(reason);
 
 		var signInCallback = authResult => {
-			if(!authResult['code']) return;
-				
+			if(!authResult['code']) return;				
 
 			$('#signinButton').attr('style', 'display: none');
+			signInOutput('Authenticating, please wait...');
 
 			// Send one-time-use code to the server and if it responds:
 			//  - write a login soccessful mesage
