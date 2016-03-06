@@ -14,6 +14,17 @@
 
 			<h1>{{ restaurant.name }}</h1>
 			
+			<div class="media marginBottom-10px">
+				<div class="media-left">
+					<a href="#">
+						<img class="media-object" src="{{creator.picture}}" alt="{{creator.name}}">
+					</a>
+				</div>
+				<div class="media-body verticalAlign-middle">
+					<h4 class="media-heading">Creator: {{creator.name}}</h4>
+				</div>
+			</div>
+			
 			<p>
 				<a class="btn btn btn-primary"
 				href="{{ url_for('new_menu_item', restaurant_id = restaurant.id) }}">

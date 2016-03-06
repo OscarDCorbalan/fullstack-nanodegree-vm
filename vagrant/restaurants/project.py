@@ -235,7 +235,7 @@ def gdisconnect():
 @app.route('/restaurants')
 def show_restaurants():
 	restaurants = rst_dao.get_all_restaurants()
-	print login_session
+
 	if 'username' not in login_session:
 		return render_template(
 			'publicrestaurants.html',
@@ -310,17 +310,20 @@ def delete_restaurant(restaurant_id):
 def show_menu(restaurant_id):
 	restaurant = rst_dao.get_restaurant(restaurant_id)
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
+	creator = usr_dao.get_user(restaurant.user_id)
 
 	if 'username' not in login_session:
 		return render_template(
 			'publicmenu.html', 
 			restaurant = restaurant, 
-			items = items)
+			items = items,
+			creator = creator)
 	else:
 		return render_template(
 			'menu.html', 
 			restaurant = restaurant, 
 			items = items,
+			creator = creator,
 			username = login_session['username'])
 
 

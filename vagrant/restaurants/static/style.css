@@ -5,11 +5,19 @@ body{ background-color: #F7F7F7; }
 .marginBottom-5px{ margin-bottom: 5px; }
 .marginBottom-10px{ margin-bottom: 10px; }
 .marginLeft-10px{ margin-left: 10px; }
+.verticalAlign-middle{vertical-align: middle;}
 
 .navbar{border-radius: 0;}
 
 a.list-group-item:hover{
     background-color: #AFA;
+}
+
+
+.media img{
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
 }
 
 .thumbnail {
