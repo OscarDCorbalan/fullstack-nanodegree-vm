@@ -234,8 +234,7 @@ def show_restaurants():
 	if 'username' not in login_session:
 		return render_template(
 			'publicrestaurants.html',
-			restaurants = restaurants,
-			username = login_session['username'])
+			restaurants = restaurants)
 	else:
 		return render_template(
 			'restaurants.html',
