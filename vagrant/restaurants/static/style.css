@@ -13,6 +13,11 @@ a.list-group-item:hover{
     background-color: #AFA;
 }
 
+.media{
+    border: 1px solid #DDD;
+    padding: 4px;
+    background-color: #EEE;
+}
 
 .media img{
     width: 48px;
