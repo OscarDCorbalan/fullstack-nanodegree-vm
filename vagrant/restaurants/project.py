@@ -111,6 +111,11 @@ def is_logged():
 	return 'username' in login_session
 
 
+def allowed_file(filename):
+	return '.' in filename and \
+		filename.rsplit('.', 1)[1] in ALLOWED_FILES
+
+
 # Web routes
 
 # Login route
@@ -339,9 +344,8 @@ def new_menu_item(restaurant_id):
 	mnu_dao.add_menu_item(restaurant_id, new_name)
 	flash('New menu item created', 'success')
 
-	return redirect(
-		url_for('show_menu',
-			restaurant_id = restaurant_id))
+	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
+
 
 
 # Form to edit an existing menu item
@@ -395,10 +399,6 @@ def edit_menu_item(restaurant_id, menu_id):
 
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
-
-def allowed_file(filename):
-	return '.' in filename and \
-		filename.rsplit('.', 1)[1] in ALLOWED_FILES
 
 
 # Form to delete an existing menu item
