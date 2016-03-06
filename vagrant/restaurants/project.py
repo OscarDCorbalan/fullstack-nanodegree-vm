@@ -218,10 +218,11 @@ def gdisconnect():
 		del login_session['username']
 		del login_session['email']
 		del login_session['picture']
-		return json_response(200, 'Successfully disconnected')
+		flash('Successfully disconnected', 'success')
+		return redirect(url_for('show_restaurants'))
 	else:
-		print result
-		return json_response(400, 'Failed to revoke user\'s token')
+		flash("Failed to revoke user's token", 'error')
+		return redirect(url_for('show_restaurants'))
 
 
 # Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
