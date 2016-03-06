@@ -14,7 +14,7 @@ from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAut
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_FILES = set(['png', 'jpg', 'jpeg', 'gif'])
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(open('client_secrets_gc.json', 'r').read())['web']['client_id']
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
