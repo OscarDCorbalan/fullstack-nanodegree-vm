@@ -31,7 +31,7 @@ class GenericDAO():
 class UserDAO(GenericDAO):
 
     def get_user(self, user_id):
-        return self.session.query(User).filter_by(user_id = user_id).one()
+        return self.session.query(User).filter_by(id = user_id).one()
 
 
     def get_user_id(self, email):
