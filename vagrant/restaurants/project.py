@@ -111,9 +111,14 @@ def is_logged():
 	return 'username' in login_session
 
 
+def is_owners_session(obj):
+	return is_logged() and obj.user_id == login_session['user_id']
+
+
 def allowed_file(filename):
 	return '.' in filename and \
 		filename.rsplit('.', 1)[1] in ALLOWED_FILES
+
 
 
 # Web routes
@@ -272,8 +277,11 @@ def edit_restaurant(restaurant_id):
 	if not is_logged():
 		return redirect('login')
 
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	if not is_owners_session(restaurant):
+		return "<script>function f(){alert('You are not authorized to edit this restaurant.');};</script><body onload='f()'></body>"
+
 	if request.method == 'GET':
-		restaurant = rst_dao.get_restaurant(restaurant_id)
 		return render_template('editrestaurant.html', restaurant = restaurant)
 
 	# Else: it's a POST
@@ -291,6 +299,8 @@ def delete_restaurant(restaurant_id):
 		return redirect('login')
 
 	restaurant = rst_dao.get_restaurant(restaurant_id)
+	if not is_owners_session(restaurant):
+		return "<script>function f(){alert('You are not authorized to delete this restaurant.');};</script><body onload='f()'></body>"
 
 	if request.method == 'GET':		
 		return render_template(
@@ -312,19 +322,21 @@ def show_menu(restaurant_id):
 	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
 	creator = usr_dao.get_user(restaurant.user_id)
 
-	if 'username' not in login_session:
-		return render_template(
-			'publicmenu.html', 
-			restaurant = restaurant, 
-			items = items,
-			creator = creator)
-	else:
+	# If logged user is the creator, show owner's page
+	if is_owners_session(restaurant):
 		return render_template(
 			'menu.html', 
 			restaurant = restaurant, 
 			items = items,
 			creator = creator,
 			username = login_session['username'])
+	# Else, show public page
+	else:
+		return render_template(
+			'publicmenu.html', 
+			restaurant = restaurant, 
+			items = items,
+			creator = creator)
 
 
 # Form to create a new menu item in the restaurant
@@ -334,12 +346,15 @@ def new_menu_item(restaurant_id):
 	if not is_logged():
 		return redirect('login')
 
+	restaurant = rst_dao.get_restaurant(restaurant_id)
+	if not is_owners_session(restaurant):
+		return "<script>function f(){alert('You are not authorized to add a menu item.');};</script><body onload='f()'></body>"
+
 	if request.method == 'GET':
-		restaurant_name = rst_dao.get_restaurant(restaurant_id).name
 		return render_template(
 			'newmenuitem.html', 
 			restaurant_id = restaurant_id, 
-			restaurant_name=restaurant_name,
+			restaurant_name=restaurant.name,
 			username = login_session['username'])
 	
 	# Else it's a POST
@@ -358,9 +373,12 @@ def edit_menu_item(restaurant_id, menu_id):
 	if not is_logged():
 		return redirect('login')
 
+	item = mnu_dao.get_menu(menu_id)
+	if not is_owners_session(item):
+		return "<script>function f(){alert('You are not authorized to edit this menu item.');};</script><body onload='f()'></body>"
+
 	if request.method == 'GET':
 		restaurant = rst_dao.get_restaurant(restaurant_id)
-		item = mnu_dao.get_menu(menu_id)
 		return render_template('editmenuitem.html',
 								restaurant = restaurant,
 								item = item,
@@ -411,8 +429,11 @@ def delete_menu_item(restaurant_id, menu_id):
 	if not is_logged():
 		return redirect('login')
 
+	menu = mnu_dao.get_menu(menu_id)
+	if not is_owners_session(menu):
+		return "<script>function f(){alert('You are not authorized to delete this menu item.');};</script><body onload='f()'></body>"
+
 	if request.method == 'GET':
-		menu = mnu_dao.get_menu(menu_id)
 		rst_name = rst_dao.get_restaurant(restaurant_id).name
 		return render_template(
 			'deletemenuitem.html',
