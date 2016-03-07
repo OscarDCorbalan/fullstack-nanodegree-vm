@@ -48,7 +48,7 @@ def allowed_file(filename):
 		filename.rsplit('.', 1)[1] in ALLOWED_FILES
 
 
-# Login and logout routes
+# Web routes
 
 # Login route
 @app.route('/login')
@@ -63,9 +63,6 @@ def show_login():
 	login_session['state'] = state
 	return render_template('login.html', STATE=state)
 
-
-
-# Web routes
 
 # Our index, shows a list of all the restaurants, plus restaurant create/edit/delete links
 @app.route('/')
