@@ -6,16 +6,18 @@ import json
 import requests
 from datetime import datetime
 from daos import UserDAO, RestaurantDAO, MenuItemDAO
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session as login_session, make_response
+from flask import Flask, render_template, request, redirect, url_for, flash, session as login_session, make_response
 from werkzeug import SharedDataMiddleware, secure_filename
-from werkzeug.contrib.atom import AtomFeed
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAuth2Credentials
+from project_api_endpoints import api_json, api_atom
 
-
+# App constants
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_FILES = set(['png', 'jpg', 'jpeg', 'gif'])
 CLIENT_ID = json.loads(open('client_secrets_gc.json', 'r').read())['web']['client_id']
 
+
+# Initialize app
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 # 1 Megabyte
@@ -23,80 +25,15 @@ app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/uploads':  app.config['UPLOAD_FOLDER']
 })
+# Register blueprints from project_api_endpoint.py
+app.register_blueprint(api_json)
+app.register_blueprint(api_atom)
 
+
+# Instantiate our Data Access Objects
 usr_dao = UserDAO()
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
-
-
-# JSON Endpoints 
-
-@app.route('/restaurants/JSON')
-def restaurants_json():
-	restaurants = rst_dao.get_all_restaurants()
-	return jsonify(Restaurants=[r.serialize for r in restaurants])
-
-
-@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
-def restaurant_menu_json(restaurant_id):
-	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
-	return jsonify(MenuItems=[i.serialize for i in items])
-
-
-@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def menu_item_json(restaurant_id, menu_id):
-	item = mnu_dao.get_menu(menu_id)
-	return jsonify(MenuItem=item.serialize)
-
-
-# Atom Endpoints
-
-@app.route('/restaurants/ATOM')
-def restaurants_atom():
-	feed = AtomFeed('Restaurants', feed_url=request.url, url=url_for('show_restaurants'))
-
-	restaurants = rst_dao.get_all_restaurants()
-	for r in restaurants:
-		feed.add(r.name, unicode(r.name),
-                 content_type='html',
-                 id=r.id,
-                 url=url_for('show_menu', restaurant_id=r.id),
-                 updated=datetime.today())
-	return feed.get_response()
-
-
-@app.route('/restaurants/<int:restaurant_id>/menu/ATOM')
-def restaurant_menu_atom(restaurant_id):
-	restaurant = rst_dao.get_restaurant(restaurant_id)
-	feed = AtomFeed('%s menu' %restaurant.name,
-		feed_url=request.url,
-		url=url_for('show_menu', restaurant_id = restaurant_id))
-
-	items = mnu_dao.get_menu_by_restaurant(restaurant_id)
-	for i in items:
-		feed.add(i.name, unicode(i.description),
-                 content_type='html',
-                 id=i.id,
-                 url=url_for('show_menu', restaurant_id=restaurant_id),
-                 updated=datetime.today())
-	return feed.get_response()
-
-
-@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/ATOM')
-def menu_item_atom(restaurant_id, menu_id):
-	restaurant = rst_dao.get_restaurant(restaurant_id)
-	item = mnu_dao.get_menu(menu_id)
-
-	feed = AtomFeed(item.name,
-		feed_url=request.url,
-		url=url_for('show_menu', restaurant_id = restaurant_id))
-
-	feed.add(item.name, unicode(item.description),
-             content_type='html',
-             id=item.id,
-             url=url_for('show_menu', restaurant_id=restaurant_id),
-             updated=datetime.today())
-	return feed.get_response()
 
 
 # Helper functions
