@@ -31,7 +31,6 @@ def fbconnect():
 		return json_response(401, 'Invalid state paremeter.')
 
     access_token = request.data
-    print "access token received %s " % access_token
 
     app_id = json.loads(
     	open('client_secrets_fb.json', 'r').read())['web']['app_id']
