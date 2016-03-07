@@ -4,15 +4,15 @@ from daos import UserDAO, RestaurantDAO, MenuItemDAO
 from datetime import datetime
 
 
+# Create blueprints to access them from project.py
+api_json = Blueprint('api_json', __name__, template_folder='templates')
+api_atom = Blueprint('api_atom', __name__, template_folder='templates')
+
+
+
 usr_dao = UserDAO()
 rst_dao = RestaurantDAO()
 mnu_dao = MenuItemDAO()
-
-
-# Create blueprints to access them from project.py
-
-api_json = Blueprint('api_json', __name__, template_folder='templates')
-api_atom = Blueprint('api_atom', __name__, template_folder='templates')
 
 
 # JSON Endpoints 
