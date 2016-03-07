@@ -33,7 +33,7 @@ class Restaurant(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'owner': user.name
+            'owner': self.user.name
         }
 
 
