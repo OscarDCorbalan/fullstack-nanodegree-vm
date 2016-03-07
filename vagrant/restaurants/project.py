@@ -52,7 +52,11 @@ def allowed_file(filename):
 
 # Login route
 @app.route('/login')
-def showLogin():
+def show_login():
+	# Redirect users who are already logged but go to the login page
+	if is_logged():
+		return redirect(url_for('show_restaurants'))
+
 	# Create anti-forgery state token
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) 
 		for x in xrange(32))
@@ -69,7 +73,7 @@ def showLogin():
 def show_restaurants():
 	restaurants = rst_dao.get_all_restaurants()
 
-	if 'username' not in login_session:
+	if not is_logged():
 		return render_template(
 			'publicrestaurants.html',
 			restaurants = restaurants)
