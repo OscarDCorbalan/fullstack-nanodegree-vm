@@ -275,7 +275,7 @@ def delete_menu_item(restaurant_id, menu_id):
 	return redirect(url_for('show_menu', restaurant_id = restaurant_id))
 
 
-#if __name__ == '__main__':
-app.secret_key = 'super_insecure_key'
-app.debug = True
-#app.run(host = '0.0.0.0', port = 5000)
+if __name__ == '__main__':
+	app.secret_key = 'super_insecure_key'
+	app.debug = True
+app.run(host = '0.0.0.0', port = 5000)
