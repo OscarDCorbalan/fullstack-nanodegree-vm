@@ -9,6 +9,9 @@ Base = declarative_base()
 
 
 class User(Base):
+    """This class represents a User, which can own multiple restaurants and
+    MenuItems. A User is identified by its id, but note that emails are also
+    unique by definition."""
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
@@ -18,6 +21,8 @@ class User(Base):
 
 
 class Restaurant(Base):
+    """This class represents a Restaurant, which is owned by one User and
+    contains an arbitrary number of MenuItems"""
     __tablename__ = 'restaurant'
 
     id = Column(Integer, primary_key=True)
@@ -27,6 +32,7 @@ class Restaurant(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
+    # Delete the MenuItems linke dto this restaurant, when it is deleted
     menuItems = relationship("MenuItem", cascade="all, delete-orphan")
 
     @property
@@ -40,6 +46,9 @@ class Restaurant(Base):
 
 
 class MenuItem(Base):
+    """This class represents a Menu Item, which is linked to the restaurant
+    that serves it and is owned by one User, which is the same owner of the
+    restaurant"""
     __tablename__ = 'menu_item'
 
     id = Column(Integer, primary_key=True)
