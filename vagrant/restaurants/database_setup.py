@@ -11,17 +11,17 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key = True)
-    name = Column(String(250), nullable = False)
-    email = Column(String(250), nullable = False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
     picture = Column(String(250))
 
 
 class Restaurant(Base):
     __tablename__ = 'restaurant'
 
-    id = Column(Integer, primary_key = True)
-    name = Column(String(250), nullable = False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
 
     # Owner User
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -42,8 +42,8 @@ class Restaurant(Base):
 class MenuItem(Base):
     __tablename__ = 'menu_item'
 
-    id = Column(Integer, primary_key = True)
-    name = Column(String(80), nullable = False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=False)
     course = Column(String(250))
     description = Column(String(250))
     price = Column(String(8))
@@ -69,9 +69,9 @@ class MenuItem(Base):
         }
 
 
-
-#engine = create_engine('sqlite:///restaurantmenu.db')
-engine = create_engine("postgresql://wqazmtporkwsid:VYePuHFUk3fAS2HOYpl6gcH9g5@ec2-54-235-153-179.compute-1.amazonaws.com:5432/deeehql62re7uk")
+# engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine("postgresql://wqazmtporkwsid:VYePuHFUk3fAS2HOYpl6gcH9g5\
+    @ec2-54-235-153-179.compute-1.amazonaws.com:5432/deeehql62re7uk")
 
 
 Base.metadata.create_all(engine)
