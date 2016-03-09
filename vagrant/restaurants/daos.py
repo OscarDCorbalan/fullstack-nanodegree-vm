@@ -5,7 +5,8 @@ from database_setup import Base, Restaurant, MenuItem, User
 
 class GenericDAO():
     """This class implements common functionalities for all Data-Access
-    Objects"""
+    Objects, such as opening/closing a session and helpers to commit and 
+    delete objects."""
 
     def __init__(self):
         """Initializes a session to our sqlite database"""
@@ -46,6 +47,8 @@ class GenericDAO():
 
 
 class UserDAO(GenericDAO):
+    """This class implements CRUD operations, via SQLAlchemy, on Users. The
+    User class is defined in database_setup.py"""
 
     def get_user(self, user_id):
         """Gets the user with the primary key user_id.
@@ -92,6 +95,8 @@ class UserDAO(GenericDAO):
 
 
 class RestaurantDAO(GenericDAO):
+    """This class implements CRUD operations, via SQLAlchemy, on Restaurants.
+    The Restaurant class is defined in database_setup.py"""
 
     def get_restaurant(self, rest_id):
         """Gets the restaurant with the primary key rest_id.
@@ -159,6 +164,8 @@ class RestaurantDAO(GenericDAO):
 
 
 class MenuItemDAO(GenericDAO):
+    """This class implements CRUD operations, via SQLAlchemy, on MenuItems.
+    The MenuItem class is defined in database_setup.py"""
 
     def get_menu(self, menu_id):
         """Gets the menu item with the primary key menu_id.
