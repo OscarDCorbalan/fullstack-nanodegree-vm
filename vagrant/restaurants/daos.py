@@ -10,10 +10,8 @@ class GenericDAO():
 
     def __init__(self):
         """Initializes a session to our sqlite database"""
-
         # engine = create_engine('sqlite:///restaurantmenu.db')
-        engine = "postgres://wqazmtporkwsid:VYePuHFUk3fAS2HOYpl6gcH9g5@ec2-54-\
-                  235-153-179.compute-1.amazonaws.com:5432/deeehql62re7uk"
+        engine = create_engine("postgres://wqazmtporkwsid:VYePuHFUk3fAS2HOYpl6gcH9g5@ec2-54-235-153-179.compute-1.amazonaws.com:5432/deeehql62re7uk")
         Base.metadata.bind = engine
         DBSession = sessionmaker(bind=engine)
         self.session = DBSession()
@@ -22,7 +20,6 @@ class GenericDAO():
         """Closes the connection opened when the instance was initialized. The
         object can't be used afterwards.
         """
-
         self.session.close()
 
     def persist(self, obj):
@@ -31,7 +28,6 @@ class GenericDAO():
         Args:
             obj: Object instance to be committed
         """
-
         self.session.add(obj)
         self.session.commit()
 
@@ -41,7 +37,6 @@ class GenericDAO():
         Args:
             obj: Object to be removed from the DB
         """
-
         self.session.delete(obj)
         self.session.commit()
 
@@ -59,7 +54,6 @@ class UserDAO(GenericDAO):
         Returns:
             The instance that represents the user
         """
-
         return self.session.query(User).filter_by(id=user_id).one()
 
     def get_user_id(self, email):
@@ -71,7 +65,6 @@ class UserDAO(GenericDAO):
         Returns:
             The DB id of the row with the user info.
         """
-
         try:
             return self.session.query(User).filter_by(email=email).one().id
         except:
@@ -88,7 +81,6 @@ class UserDAO(GenericDAO):
         Returns:
             The DB id of the row with the user info.
         """
-
         new_user = User(name=name, email=email, picture=picture)
         self.persist(new_user)
         return self.get_user_id(email)
@@ -107,7 +99,6 @@ class RestaurantDAO(GenericDAO):
         Returns:
             The instance that represents the restaurant.
         """
-
         return self.session.query(Restaurant).filter_by(id=rest_id).one()
 
     def get_first_restaurant(self):
@@ -124,7 +115,6 @@ class RestaurantDAO(GenericDAO):
         Returns:
             A list with all the restaurants, in no particular order.
         """
-
         return self.session.query(Restaurant).all()
 
     def set_restaurant_name(self, rest_id, new_name):
@@ -134,7 +124,6 @@ class RestaurantDAO(GenericDAO):
             rest_id: id of the restaurant to modify
             new_name: new name of the restaurant
         """
-
         restaurant = self.get_restaurant(rest_id)
         if restaurant:
             restaurant.name = new_name
@@ -147,7 +136,6 @@ class RestaurantDAO(GenericDAO):
             new_name: name of the restaurant
             user_id: owner of the restaurant. Foreign Key of Users.
         """
-
         new_restaurant = Restaurant(name=new_name, user_id=user_id)
         self.persist(new_restaurant)
 
@@ -157,7 +145,6 @@ class RestaurantDAO(GenericDAO):
         Args:
             rest_id: id of the restaurant to delete
         """
-
         restaurant = self.get_restaurant(rest_id)
         if restaurant:
             self.discontinue(restaurant)
@@ -176,7 +163,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         return self.session.query(MenuItem).filter_by(id=menu_id).one()
 
     def get_menu_by_restaurant(self, rest_id):
@@ -189,7 +175,6 @@ class MenuItemDAO(GenericDAO):
             A list with all the menu items of the restaurant, in no particular
             ordering.
         """
-
         return self.session.query(MenuItem).filter_by(
             restaurant_id=rest_id).all()
 
@@ -202,7 +187,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         menu = self.get_menu(menu_id)
         return menu.name
 
@@ -215,7 +199,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         menu = self.get_menu(menu_id)
         return menu.description
 
@@ -228,7 +211,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         menu = self.get_menu(menu_id)
         return menu.price
 
@@ -241,7 +223,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         menu = self.get_menu(menu_id)
         return menu.course
 
@@ -254,7 +235,6 @@ class MenuItemDAO(GenericDAO):
         Returns:
             The instance that represents the menu item.
         """
-
         menu = self.get_menu(menu_id)
         return menu.filename
 
@@ -265,7 +245,6 @@ class MenuItemDAO(GenericDAO):
             menu_id: id of the menu item to modify
             new_name: new name of the menu item
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             menu.name = new_name
@@ -278,7 +257,6 @@ class MenuItemDAO(GenericDAO):
             menu_id: id of the menu item to modify
             new_description: new description of the menu item
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             menu.description = new_description
@@ -291,7 +269,6 @@ class MenuItemDAO(GenericDAO):
             menu_id: id of the menu item to modify
             new_price: new price of the menu item
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             menu.price = new_price
@@ -304,7 +281,6 @@ class MenuItemDAO(GenericDAO):
             menu_id: id of the menu item to modify
             new_course: new course value of the item
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             menu.course = new_course
@@ -317,7 +293,6 @@ class MenuItemDAO(GenericDAO):
             menu_id: id of the menu item to modify
             filename: new filename of the menu item
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             menu.image = filename
@@ -332,7 +307,6 @@ class MenuItemDAO(GenericDAO):
             new_name: name of the menu item
             user_id: owner of the menu item. Foreign Key on Users.
         """
-
         new_menu = MenuItem(name=new_name,
                             restaurant_id=rest_id,
                             user_id=user_id)
@@ -344,7 +318,6 @@ class MenuItemDAO(GenericDAO):
         Args:
             menu_id: id of the menu item to delete
         """
-
         menu = self.get_menu(menu_id)
         if menu:
             self.discontinue(menu)
