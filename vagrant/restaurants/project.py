@@ -2,8 +2,8 @@ import os
 import random
 import string
 from daos import UserDAO, RestaurantDAO, MenuItemDAO
-from flask import (Flask, render_template, request, redirect, url_for, flash,
-                   session as login_session, make_response)
+from flask import Flask, render_template, request, redirect, url_for, flash,
+    session as login_session, make_response
 from werkzeug import SharedDataMiddleware, secure_filename
 from project_api_endpoints import api_json, api_atom
 from project_oauth import oauth
@@ -51,14 +51,9 @@ def allowed_file(filename):
 
 # Web routes
 
+# Login route
 @app.route('/login')
 def show_login():
-    """Returns an html page for the user to log in through OAuth.
-
-    Returns:
-        If there's a logged user, redirects to main page. Else, returns a form.
-
-    """
     # Redirect users who are already logged but go to the login page
     if is_logged():
         return redirect(url_for('show_restaurants'))
@@ -70,16 +65,10 @@ def show_login():
     return render_template('login.html', STATE=state)
 
 
+# Index; shows a list of all the restaurants
 @app.route('/')
 @app.route('/restaurants')
 def show_restaurants():
-    """Returns an html page with a listing of all the restaurants.
-
-    Returns:
-        If there's a logged user, the returned html contains a link to create
-        new restaurants.
-
-    """
     restaurants = rst_dao.get_all_restaurants()
     if not is_logged():
         return render_template(
@@ -92,17 +81,9 @@ def show_restaurants():
             username=login_session['username'])
 
 
+# Form to create a new restaurant
 @app.route('/restaurants/new', methods=['GET', 'POST'])
 def new_restaurant():
-    """Returns (GET) form or creates (POST) a new restaurant in the DB, owned
-    by the user in the current session.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. Else,
-        the method either returns a form (GET) or creates a new restaurant
-        (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
@@ -117,25 +98,12 @@ def new_restaurant():
     return redirect(url_for('show_restaurants'))
 
 
+# Form to edit an existing restaurant
 @app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def edit_restaurant(restaurant_id):
-    """Returns (GET) a confirmation form or edits (POST) a restaurant, if the
-    user in Session is its owner.
-
-    Args:
-        restaurant_id: id of the restaurant to edit.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. If the
-        user in session is not the owner: an error message. Else (User is in
-        session and the owner), the method either displays an edit form (GET)
-        or edits the restaurant (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
-    # Check if the logged user is the owner
     restaurant = rst_dao.get_restaurant(restaurant_id)
     if not is_owners_session(restaurant):
         return "<script>function f(){alert('You are not authorized to edit this restaurant.');};</script><body onload='f()'></body>"
@@ -150,25 +118,12 @@ def edit_restaurant(restaurant_id):
     return redirect(url_for('show_restaurants'))
 
 
+# Form to delete a restaurant
 @app.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def delete_restaurant(restaurant_id):
-    """Returns (GET) a confirmation form or deletes (POST) a restaurant from
-    the DB, if the user in Session is its owner.
-
-    Args:
-        restaurant_id: id of the restaurant to delete.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. If the
-        user in session is not the owner: an error message. Else (User is in
-        session and the owner), the method either displays a confirmation form
-        (GET) or deletes the restaurant (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
-    # Check if the logged user is the owner
     restaurant = rst_dao.get_restaurant(restaurant_id)
     if not is_owners_session(restaurant):
         return "<script>function f(){alert('You are not authorized to delete this restaurant.');};</script><body onload='f()'></body>"
@@ -185,19 +140,10 @@ def delete_restaurant(restaurant_id):
     return redirect(url_for('show_restaurants'))
 
 
+# List of the menu items in a restaurant, plus item create/edit/delete links
 @app.route('/restaurants/<int:restaurant_id>/')
 @app.route('/restaurants/<int:restaurant_id>/menu')
 def show_menu(restaurant_id):
-    """Returns an html page with the menu of a restaurant.
-
-    Args:
-        restaurant_id: id of the restaurant.
-
-    Returns:
-        If the user in the session is the owner, the returned html contains
-        link to edit the restaurant and its menu items.
-
-    """
     restaurant = rst_dao.get_restaurant(restaurant_id)
     items = mnu_dao.get_menu_by_restaurant(restaurant_id)
     creator = usr_dao.get_user(restaurant.user_id)
@@ -219,25 +165,12 @@ def show_menu(restaurant_id):
             creator=creator)
 
 
+# Form to create a new menu item in the restaurant
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
-    """Returns (GET) an edit form or creates (POST) a new menu item in the
-    restaurant identified by restaurant_id.
-
-    Args:
-        restaurant_id: id of the restaurant that contains the menu item.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. If the
-        user in session is not the owner: an error message. Else (User is in
-        session and the owner), the method either displays a form (GET) or
-        creates a new menu item (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
-    # Check if the logged user is the owner of the restaurant
     restaurant = rst_dao.get_restaurant(restaurant_id)
     if not is_owners_session(restaurant):
         return "<script>function f(){alert('You are not authorized to add a menu item.');};</script><body onload='f()'></body>"
@@ -257,26 +190,13 @@ def new_menu_item(restaurant_id):
     return redirect(url_for('show_menu', restaurant_id=restaurant_id))
 
 
+# Form to edit an existing menu item
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/',
            methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
-    """Returns (GET) an edit form or edits (POST) a menu item.
-
-    Args:
-        restaurant_id: id of the restaurant that contains the menu item.
-        menu_id: id of the menu.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. If the
-        user in session is not the owner: an error message. Else (User is in
-        session and the owner), the method either displays a form (GET) or
-        edits the menu item (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
-    # Check if the logged user is the owner
     item = mnu_dao.get_menu(menu_id)
     if not is_owners_session(item):
         return "<script>function f(){alert('You are not authorized to edit this menu item.');};</script><body onload='f()'></body>"
@@ -329,27 +249,13 @@ def edit_menu_item(restaurant_id, menu_id):
     return redirect(url_for('show_menu', restaurant_id=restaurant_id))
 
 
+# Form to delete an existing menu item
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/',
            methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
-    """Returns (GET) a confirmation form or deletes (POST) a menu item from the
-    DB, if the user in Session is its owner.
-
-    Args:
-        restaurant_id: id of the restaurant that contains the menu item.
-        menu_id: id of the menu.
-
-    Returns:
-        If no user is in the session: a redirect to to the login page. If the
-        user in session is not the owner: an error message. Else (User is in
-        session and the owner), the method either displays a confirmation form
-        (GET) or deletes the menu item (POST).
-
-    """
     if not is_logged():
         return redirect('login')
 
-    # Check if the logged user is the owner
     menu = mnu_dao.get_menu(menu_id)
     if not is_owners_session(menu):
         return "<script>function f(){alert('You are not authorized to delete this menu item.');};</script><body onload='f()'></body>"
