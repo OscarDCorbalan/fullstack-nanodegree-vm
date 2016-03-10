@@ -1,20 +1,24 @@
+"""This file creates a Flask Blueprint with our OAuth routes, which are then
+imported and mounted by our server."""
+
 import httplib2
 import json
 import requests
 from daos import UserDAO
-from flask import abort, Blueprint, flash, redirect, request, session as login_session, url_for
-from oauth2client.client import flow_from_clientsecrets, FlowExchangeError, OAuth2Credentials
+from flask import (abort, Blueprint, flash, redirect, request,
+                   session as login_session, url_for)
+from oauth2client.client import (flow_from_clientsecrets, FlowExchangeError,
+                                 OAuth2Credentials)
 
-
-"""This file creates a Flask Blueprint with our OAuth routes, which are then
-imported and mounted by our server."""
 
 # Load our Google secrets
-CLIENT_ID = json.loads(open('client_secrets_gc.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(
+    open('client_secrets_gc.json', 'r').read())['web']['client_id']
 usr_dao = UserDAO()
 
 # Create blueprint 'oauth' to be mounted from project.py
 oauth = Blueprint('oauth', __name__, template_folder='templates')
+
 
 # Helper functions
 
@@ -74,7 +78,8 @@ def fbconnect():
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
 
-    # The token must be stored in the login_session in order to properly logout, let's strip out the information before the equals sign in our token
+    # The token must be stored in the login_session in order to properly logout
+    # let's strip out the information before the equals sign in our token
     stored_token = token.split("=")[1]
     login_session['access_token'] = stored_token
 
@@ -90,8 +95,8 @@ def fbconnect():
     user_id = usr_dao.get_user_id(login_session['email'])
     if not user_id:
         user_id = usr_dao.add_user(
-            login_session['username'], 
-            login_session['email'], 
+            login_session['username'],
+            login_session['email'],
             login_session['picture'])
     login_session['user_id'] = user_id
 
@@ -121,15 +126,16 @@ def gconnect():
         return json_response(401, 'Invalid state paremeter.')
     code = request.data
     try:
-        ouath_flow = flow_from_clientsecrets('client_secrets_gc.json', scope='')
+        ouath_flow = flow_from_clientsecrets(
+            'client_secrets_gc.json', scope='')
         ouath_flow.redirect_uri = 'postmessage'
         credentials = ouath_flow.step2_exchange(code)
     except FlowExchangeError:
         return json_response(401, 'Failed to upgrade the authorization code.')
 
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
-        % access_token)
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' %
+           access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
@@ -172,8 +178,8 @@ def gconnect():
     user_id = usr_dao.get_user_id(data['email'])
     if not user_id:
         user_id = usr_dao.add_user(
-            data['name'], 
-            data['email'], 
+            data['name'],
+            data['email'],
             data['picture'])
     login_session['user_id'] = user_id
 
@@ -225,11 +231,12 @@ def disconnect():
 # Disconnect Facebook, revoking user's token and ressetting its session
 @oauth.route('/fbdisconnect')
 def fbdisconnect():
-    """Revoke user's Facebook access token."""
+    """Revokes user's Facebook access token."""
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+        facebook_id, access_token)
     # Call and check everything went fine
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
@@ -237,10 +244,11 @@ def fbdisconnect():
         flash("Failed to revoke user's token", "error")
         return False
 
+
 # Disconnect Google, revoking user's token and ressetting its session
 @oauth.route('/gdisconnect')
 def gdisconnect():
-    """Revoke user's Google access token."""
+    """Revokes user's Google access token."""
     # Abort if not connected
     credentials = login_session.get('credentials')
     if credentials is None:
