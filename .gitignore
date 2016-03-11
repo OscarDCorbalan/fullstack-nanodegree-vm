@@ -1,2 +1,3 @@
 vagrant/.vagrant
 *.pyc
+vagrant/restaurants/uploads/
