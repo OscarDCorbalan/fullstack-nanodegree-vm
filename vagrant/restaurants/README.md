@@ -2,7 +2,14 @@
 
 _This project is part of Udacity's Full Stack Developer Nanodegree._
 
-This project consists in implementing **Python** modules that use **SQLAlchemy** with **SQLite** databases.
+This project implements a restaurant-showroom web application built with:
+  * Server-side: **Python** plus the **Flask** framework.
+  * Database: **SQLAlchemy** backed by a **PostgreSQL** database. Also tested with **SQLite** during development.
+  * Front-end: **HTML5/CSS3**, with a **Bootstrap** interface and some **jQuery**.
+
+**Live site**: https://oscardoc-restaurant-menu.herokuapp.com, hosted at [Heroku](https://www.heroku.com)
+
+## Screenshot
 
 ![screenshot](/vagrant/restaurants/screenshot.jpg?raw=true "Project as of 29 February 2016")
 
