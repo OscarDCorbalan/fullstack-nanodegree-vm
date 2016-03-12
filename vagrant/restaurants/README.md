@@ -27,13 +27,11 @@ To run the project tests, follow these steps:
   * [Download the latest release](https://github.com/OscarDoc/fullstack-nanodegree-vm/archive/master.zip)
 3. Open a command-line window and go to the /fullstack-nanodegree-vm/vagrant folder of the project.
 4. Once in it, run `vagrant up`. That command will load the Virtual Machine, which contains the development environment.
-5. SSH into the machine with the username `vagrant`. Depending on your OS:
+5. SSH into the machine with the username `vagrant` and password `vagrant`. Depending on your OS:
   * **NOT** Windows: just run `vagrant ssh`.
   * Windows: Running `vagrant ssh` will mourn that it's not possible and provide you an IP/port to log in. So, to log in, download [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) and follow the instructions [found here](https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY), which basically explain how to use the Vagrant VM certificate in PuTTY.
 6. Once inside the VM, run `cd /vagrant/tournament`.
-7. Then, to run the project, you can do it with both these commands:
-  * `python project.py`
-  * `foreman start`
+7. To start the web, just run `python project.py`
 8. Once it's started, it will be available from the brwoser at [localhost:5000](http://localhost:5000).
 
 
@@ -60,12 +58,8 @@ Within the download you'll find the following directories and files, logically g
 │   │   ├──client_secrets_gc.json     Google OAuth secrets file
 │   │   ├──Procfile                   Script for foreman
 │   │   └──requirements.txt           Configuration for Heroku
-│   ├── Vagrantfile                   Virtual machine configuration  
-│   ├── pg_config.sh
 │   ├── tournament/                   Project 2 of the Full-stack Nanodegree  
+│   ├── Vagrantfile                   Virtual machine configuration  
+│   └── pg_config.sh                  Script that install everything needed in the VM
 └── README.md                         Repository readme file
 ```
-
-# Test cases (strikethrough means implemented)
-
-**TODO**
