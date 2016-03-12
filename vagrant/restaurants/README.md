@@ -1,8 +1,8 @@
-# Restaurants (Python + SQLite)
+# Item catalog
 
 _This project is part of Udacity's Full Stack Developer Nanodegree._
 
-This project implements a restaurant-showroom web application built with:
+This project implements a web application that lets restaurant owners show their menus. It's built with:
   * Server-side: **Python** plus the **Flask** framework.
   * Database: **SQLAlchemy** backed by a **PostgreSQL** database. Also tested with **SQLite** during development.
   * Front-end: **HTML5/CSS3**, with a **Bootstrap** interface and some **jQuery**.
@@ -12,13 +12,6 @@ This project implements a restaurant-showroom web application built with:
 ## Screenshot
 
 ![screenshot](/vagrant/restaurants/screenshot.jpg?raw=true "Project as of 29 February 2016")
-
-**TODO**
-
-## Note: problem-set-1 folder
-
-You can safely ignore it when running the project, as it's just a problem set to practice, where students need to rely on the SQLAlchemy documentation and Python documentation heavily, with freedom to use any other outside resources like StackOverflow or Flask blogs.
-
 
 
 # How to run the project
