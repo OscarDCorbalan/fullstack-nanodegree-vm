@@ -5,7 +5,7 @@ import httplib2
 import json
 import requests
 from daos import UserDAO
-from flask import (abort, Blueprint, flash, redirect, request,
+from flask import (abort, Blueprint, flash, make_response, redirect, request,
                    session as login_session, url_for)
 from oauth2client.client import (flow_from_clientsecrets, FlowExchangeError,
                                  OAuth2Credentials)
@@ -207,13 +207,11 @@ def disconnect():
     if 'provider' in login_session:
         # First revoke the provider's access token
         if login_session['provider'] == 'google':
-            if not gdisconnect():
-                return redirect(url_for('show_restaurants'))
+            gdisconnect()
             del login_session['gplus_id']
             del login_session['credentials']
         if login_session['provider'] == 'facebook':
-            if not fbdisconnect():
-                return redirect(url_for('show_restaurants'))
+            fbdisconnect()
             del login_session['facebook_id']
         # Then delete the user's session
         del login_session['username']
@@ -221,10 +219,10 @@ def disconnect():
         del login_session['picture']
         del login_session['user_id']
         del login_session['provider']
-        flash("You have successfully been logged out.")
+        flash("You have successfully been logged out.", "success")
         return redirect(url_for('show_restaurants'))
     else:
-        flash("You were not logged in")
+        flash("You were not logged in", "success")
         return redirect(url_for('show_restaurants'))
 
 
@@ -240,9 +238,6 @@ def fbdisconnect():
     # Call and check everything went fine
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    if result['status'] != '200':
-        flash("Failed to revoke user's token", "error")
-        return False
 
 
 # Disconnect Google, revoking user's token and ressetting its session
@@ -253,7 +248,7 @@ def gdisconnect():
     credentials = login_session.get('credentials')
     if credentials is None:
         flash("Current user not connected", "error")
-        return False
+        return json_response("Current user not connected", 401)
 
     credentials = OAuth2Credentials.from_json(credentials)
     # Execute HTTP GET to revoke current token
@@ -264,4 +259,4 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
     if result['status'] != '200':
         flash("Failed to revoke user's token", "error")
-        return False
+        return json_response("Failed to revoke user's token", 400)
