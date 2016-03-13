@@ -4,6 +4,7 @@ import string
 from daos import UserDAO, RestaurantDAO, MenuItemDAO
 from flask import (Flask, render_template, request, redirect, url_for, flash,
                    session as login_session, make_response)
+from flask.ext.seasurf import SeaSurf
 from werkzeug import SharedDataMiddleware, secure_filename
 from project_api_endpoints import api_json, api_atom
 from project_oauth import oauth
@@ -14,6 +15,7 @@ ALLOWED_FILES = set(["png", "jpg", "jpeg", "gif"])
 
 # Initialize app
 app = Flask(__name__)
+csrf = SeaSurf(app) # Extension to prevent cross-site request forgery (CSRF)
 app.debug = True   # if True Flash will reload the code on every change
 app.secret_key = "super_insecure_key"
 app.config["UPLOAD_FOLDER"] = os.path.join('/tmp')  # Not permanent at Heroku!!
