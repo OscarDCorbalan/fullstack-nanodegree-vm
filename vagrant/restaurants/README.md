@@ -31,7 +31,7 @@ To run the project tests, follow these steps:
   * **NOT** Windows: just run `vagrant ssh`.
   * Windows: Running `vagrant ssh` will mourn that it's not possible and provide you an IP/port to log in. So, to log in, download [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) and follow the instructions [found here](https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY), which basically explain how to use the Vagrant VM certificate in PuTTY.
 6. Once inside the VM, run `cd /vagrant/tournament`.
-7. Instal Python dependencies; `pip install -r requirements.txt`
+7. Instal Python dependencies; `sudo pip install -r requirements.txt`
 8. To start the web, just run `python project.py`
 9. Once it's started, it will be available from the brwoser at [localhost:5000](http://localhost:5000).
 
