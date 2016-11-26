@@ -9,7 +9,7 @@ This project implements a web application that lets restaurant owners show their
 
 ## Project homepage
 
-Extra details can be fount at: http://www.oscardc.com/project/restaurant-menu
+Extra details can be found at: http://www.oscardc.com/project/restaurant-menu
 
 ## Live site
 
